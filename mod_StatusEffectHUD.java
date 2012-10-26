@@ -49,12 +49,12 @@ public class mod_StatusEffectHUD extends BaseMod
     private String versionURL = "https://dl.dropbox.com/u/20748481/Minecraft/1.3.1/statusEffectHUD.version";
     private String mcfTopic = "http://www.minecraftforum.net/topic/1114612-";
     
-	public mod_StatusEffectHUD() 
-	{
+    public mod_StatusEffectHUD() 
+    {
         ModLoader.setInGameHook(this, true, false);
         versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic, ModLoader.getLogger());
         checkUpdate = allowUpdateCheck;
-	}
+    }
 
     @Override
     public String getName() 
@@ -62,23 +62,23 @@ public class mod_StatusEffectHUD extends BaseMod
         return "StatusEffectHUD";
     }
 
-	@Override
-	public String getVersion() 
-	{
-		return "v1.52(1.3.2)";
-	}
+    @Override
+    public String getVersion() 
+    {
+        return "v1.52(1.3.2)";
+    }
 
-	@Override
-	public void load() 
-	{
+    @Override
+    public void load() 
+    {
         versionChecker.checkVersionWithLogging();
     }
 
     @Override
-	public boolean onTickInGame(float f, Minecraft mc)
-	{
-		if((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) && 
-		        !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
+    public boolean onTickInGame(float f, Minecraft mc)
+    {
+        if((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) && 
+                !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
         {
             scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             displayStatusEffects(mc);
@@ -89,10 +89,10 @@ public class mod_StatusEffectHUD extends BaseMod
             if(!versionChecker.isCurrentVersion())
                 for(String msg : versionChecker.getInGameMessage())
                     mc.thePlayer.addChatMessage(msg);
-    		checkUpdate = false;
+            checkUpdate = false;
         }
-		return true;
-	}
+        return true;
+    }
 
     private int getX(int width)
     {
@@ -106,25 +106,25 @@ public class mod_StatusEffectHUD extends BaseMod
 
     private int getY(int rowCount, int height)
     {
-    	if(alignMode.equalsIgnoreCase("middleleft") || alignMode.equalsIgnoreCase("middlecenter") || alignMode.equalsIgnoreCase("middleright"))
-    		return (scaledResolution.getScaledHeight()/2) - ((rowCount * height)/2) + (applyYOffsetToMiddle ? yOffset : 0);
-    	else if(alignMode.equalsIgnoreCase("bottomleft") || alignMode.equalsIgnoreCase("bottomright"))
-    		return scaledResolution.getScaledHeight() - (rowCount * height) - yOffset;
-    	else if(alignMode.equalsIgnoreCase("bottomcenter"))
-    		return scaledResolution.getScaledHeight() - (rowCount * height) - yOffsetBottomCenter;
-    	else
-    		return yOffset;
+        if(alignMode.equalsIgnoreCase("middleleft") || alignMode.equalsIgnoreCase("middlecenter") || alignMode.equalsIgnoreCase("middleright"))
+            return (scaledResolution.getScaledHeight()/2) - ((rowCount * height)/2) + (applyYOffsetToMiddle ? yOffset : 0);
+        else if(alignMode.equalsIgnoreCase("bottomleft") || alignMode.equalsIgnoreCase("bottomright"))
+            return scaledResolution.getScaledHeight() - (rowCount * height) - yOffset;
+        else if(alignMode.equalsIgnoreCase("bottomcenter"))
+            return scaledResolution.getScaledHeight() - (rowCount * height) - yOffsetBottomCenter;
+        else
+            return yOffset;
     }
-	
-	private void displayStatusEffects(Minecraft mc)
-    {										
+    
+    private void displayStatusEffects(Minecraft mc)
+    {                                        
         Collection activeEffects = mc.thePlayer.getActivePotionEffects();
         int guiTexture = mc.renderEngine.getTexture("/gui/inventory.png");
 
         if (!activeEffects.isEmpty())
         {
-        	int yOffset = enableBackground ? 33 : enableEffectName ? 20 : 18;
-        	if (activeEffects.size() > 5 && enableBackground)
+            int yOffset = enableBackground ? 33 : enableEffectName ? 20 : 18;
+            if (activeEffects.size() > 5 && enableBackground)
                 yOffset = 132 / (activeEffects.size() - 1);
 
             int yBase = getY(activeEffects.size(),yOffset);
@@ -140,57 +140,57 @@ public class mod_StatusEffectHUD extends BaseMod
                 
                 if(enableEffectName)
                 {
-	                potionName = StatCollector.translateToLocal(potion.getName());
-	
-	                if (potionEffect.getAmplifier() == 1)
-	                {
-	                    potionName = potionName + " II";
-	                }
-	                else if (potionEffect.getAmplifier() == 2)
-	                {
-	                    potionName = potionName + " III";
-	                }
-	                else if (potionEffect.getAmplifier() == 3)
-	                {
-	                    potionName = potionName + " IV";
-	                }
-	                
-	                xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth(potionName));
+                    potionName = StatCollector.translateToLocal(potion.getName());
+    
+                    if (potionEffect.getAmplifier() == 1)
+                    {
+                        potionName = potionName + " II";
+                    }
+                    else if (potionEffect.getAmplifier() == 2)
+                    {
+                        potionName = potionName + " III";
+                    }
+                    else if (potionEffect.getAmplifier() == 3)
+                    {
+                        potionName = potionName + " IV";
+                    }
+                    
+                    xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth(potionName));
                 }
                 
                 String effectDuration = Potion.getDurationString(potionEffect);
                 
                 if(enableBackground)
-                	HUDUtils.drawTexturedModalRect(xBase, yBase, 0, 166, 140, 32, zLevel);
+                    HUDUtils.drawTexturedModalRect(xBase, yBase, 0, 166, 140, 32, zLevel);
 
                 if(alignMode.toLowerCase().contains("right"))
                 {
-                	xBase = getX(0);
-	                if (potion.hasStatusIcon())
-	                {
-	                    int potionStatusIcon = potion.getStatusIconIndex();
-	                    HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? -24 : -18), yBase + (enableBackground ? 7 : 0), 
-	                            0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
-	                }
-	                int stringWidth = mc.fontRenderer.getStringWidth(potionName);
-	                mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName, xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, 
-	                        yBase + (enableBackground ? 6 : 0), 0xffffff);
-	                stringWidth = mc.fontRenderer.getStringWidth(effectDuration);
-	                mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration, xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, 
-	                        yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10: 5), 0xffffff);
+                    xBase = getX(0);
+                    if (potion.hasStatusIcon())
+                    {
+                        int potionStatusIcon = potion.getStatusIconIndex();
+                        HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? -24 : -18), yBase + (enableBackground ? 7 : 0), 
+                                0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
+                    }
+                    int stringWidth = mc.fontRenderer.getStringWidth(potionName);
+                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName, xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, 
+                            yBase + (enableBackground ? 6 : 0), 0xffffff);
+                    stringWidth = mc.fontRenderer.getStringWidth(effectDuration);
+                    mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration, xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, 
+                            yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10: 5), 0xffffff);
                 }
                 else
                 {
-	                if (potion.hasStatusIcon())
-	                {
-	                    int potionStatusIcon = potion.getStatusIconIndex();
-	                    HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? 6 : 0), yBase + (enableBackground ? 7 : 0), 
-	                            0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
-	                }
-	                mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName, xBase + (enableBackground ? 10 : 4) + 18, 
-	                        yBase + (enableBackground ? 6 : 0), 0xffffff);
-	                mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration, xBase + (enableBackground ? 10 : 4) + 18, 
-	                        yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10: 5), 0xffffff);
+                    if (potion.hasStatusIcon())
+                    {
+                        int potionStatusIcon = potion.getStatusIconIndex();
+                        HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? 6 : 0), yBase + (enableBackground ? 7 : 0), 
+                                0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
+                    }
+                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName, xBase + (enableBackground ? 10 : 4) + 18, 
+                            yBase + (enableBackground ? 6 : 0), 0xffffff);
+                    mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration, xBase + (enableBackground ? 10 : 4) + 18, 
+                            yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10: 5), 0xffffff);
                 }
             }
         }
