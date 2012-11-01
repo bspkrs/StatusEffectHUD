@@ -51,7 +51,6 @@ public class mod_StatusEffectHUD extends BaseMod
     
     public mod_StatusEffectHUD() 
     {
-        ModLoader.setInGameHook(this, true, false);
         versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic, ModLoader.getLogger());
         checkUpdate = allowUpdateCheck;
     }
@@ -65,13 +64,14 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion() 
     {
-        return "v1.6(1.4.2)";
+        return "v1.7(1.4.2)";
     }
 
     @Override
     public void load() 
     {
         versionChecker.checkVersionWithLogging();
+        ModLoader.setInGameHook(this, true, false);
     }
 
     @Override
