@@ -4,6 +4,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,44 +17,43 @@ import bspkrs.util.client.HUDUtils;
 
 public class mod_StatusEffectHUD extends BaseMod
 {
-    protected float                 zLevel               = 0.0F;
-    private ScaledResolution        scaledResolution;
+    protected float           zLevel               = 0.0F;
+    private ScaledResolution  scaledResolution;
     @MLProp(info = "Set to true to allow checking for mod updates, false to disable")
-    public static boolean           allowUpdateCheck     = true;
+    public static boolean     allowUpdateCheck     = true;
     @MLProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
-    public static String            alignMode            = "topleft";
+    public static String      alignMode            = "topleft";
     // @MLProp(info="Valid list mode strings are horizontal and vertical")
     // public static String listMode = "vertical";
     @MLProp(info = "Set to true to see the effect background box, false to disable")
-    public static boolean           enableBackground     = false;
+    public static boolean     enableBackground     = false;
     @MLProp(info = "Set to true to show effect names, false to disable")
-    public static boolean           enableEffectName     = true;
+    public static boolean     enableEffectName     = true;
     @MLProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png)")
-    public static String            effectNameColor      = "f";
+    public static String      effectNameColor      = "f";
     @MLProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png)")
-    public static String            durationColor        = "f";
+    public static String      durationColor        = "f";
     @MLProp(info = "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen)")
-    public static int               xOffset              = 2;
+    public static int         xOffset              = 2;
     @MLProp(info = "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen)")
-    public static int               yOffset              = 2;
+    public static int         yOffset              = 2;
     @MLProp(info = "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD")
-    public static int               yOffsetBottomCenter  = 41;
+    public static int         yOffsetBottomCenter  = 41;
     @MLProp(info = "Set to true if you want the xOffset value to be applied when using a center alignment")
-    public static boolean           applyXOffsetToCenter = false;
+    public static boolean     applyXOffsetToCenter = false;
     @MLProp(info = "Set to true if you want the yOffset value to be applied when using a middle alignment")
-    public static boolean           applyYOffsetToMiddle = false;
+    public static boolean     applyYOffsetToMiddle = false;
     @MLProp(info = "Set to true to show info when chat is open, false to disable info when chat is open\n\n**ONLY EDIT WHAT IS BELOW THIS**")
-    public static boolean           showInChat           = true;
+    public static boolean     showInChat           = true;
     
-    private boolean                 checkUpdate;
-    private final ModVersionChecker versionChecker;
-    private final String            versionURL           = "https://dl.dropbox.com/u/20748481/Minecraft/1.4.5/statusEffectHUD.version";
-    private final String            mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
+    private ModVersionChecker versionChecker;
+    private final String      versionURL           = "https://dl.dropbox.com/u/20748481/Minecraft/1.4.6/statusEffectHUD.version";
+    private final String      mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
     
     public mod_StatusEffectHUD()
     {
-        versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic, ModLoader.getLogger());
-        checkUpdate = allowUpdateCheck;
+        if (allowUpdateCheck)
+            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic, ModLoader.getLogger());
     }
     
     @Override
@@ -67,7 +71,9 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public void load()
     {
-        versionChecker.checkVersionWithLogging();
+        if (allowUpdateCheck)
+            versionChecker.checkVersionWithLogging();
+        
         ModLoader.setInGameHook(this, true, false);
     }
     
@@ -80,12 +86,12 @@ public class mod_StatusEffectHUD extends BaseMod
             displayStatusEffects(mc);
         }
         
-        if (checkUpdate)
+        if (allowUpdateCheck)
         {
             if (!versionChecker.isCurrentVersion())
                 for (String msg : versionChecker.getInGameMessage())
                     mc.thePlayer.addChatMessage(msg);
-            checkUpdate = false;
+            allowUpdateCheck = false;
         }
         return true;
     }
