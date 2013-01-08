@@ -65,7 +65,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.7(1.4.5)";
+        return "v1.7(1.4.6)";
     }
     
     @Override
