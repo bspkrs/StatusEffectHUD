@@ -12,8 +12,8 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import bspkrs.client.util.HUDUtils;
 import bspkrs.util.ModVersionChecker;
-import bspkrs.util.client.HUDUtils;
 
 public class mod_StatusEffectHUD extends BaseMod
 {
@@ -65,7 +65,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.7(1.4.6)";
+        return "v1.8(1.4.6)";
     }
     
     @Override
@@ -174,9 +174,9 @@ public class mod_StatusEffectHUD extends BaseMod
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? -24 : -18), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
                     int stringWidth = mc.fontRenderer.getStringWidth(potionName);
-                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName, xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0), 0xffffff);
+                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0), 0xffffff);
                     stringWidth = mc.fontRenderer.getStringWidth(effectDuration);
-                    mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration, xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
+                    mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
                 }
                 else
                 {
@@ -185,8 +185,8 @@ public class mod_StatusEffectHUD extends BaseMod
                         int potionStatusIcon = potion.getStatusIconIndex();
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? 6 : 0), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
-                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName, xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0), 0xffffff);
-                    mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration, xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
+                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0), 0xffffff);
+                    mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
                 }
             }
         }
