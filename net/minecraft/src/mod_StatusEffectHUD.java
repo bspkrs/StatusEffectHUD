@@ -19,8 +19,6 @@ public class mod_StatusEffectHUD extends BaseMod
 {
     protected float           zLevel               = 0.0F;
     private ScaledResolution  scaledResolution;
-    @MLProp(info = "Set to true to allow checking for mod updates, false to disable")
-    public static boolean     allowUpdateCheck     = true;
     @MLProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
     public static String      alignMode            = "topleft";
     // @MLProp(info="Valid list mode strings are horizontal and vertical")
@@ -47,11 +45,13 @@ public class mod_StatusEffectHUD extends BaseMod
     public static boolean     showInChat           = true;
     
     private ModVersionChecker versionChecker;
+    private boolean           allowUpdateCheck;
     private final String      versionURL           = "https://dl.dropbox.com/u/20748481/Minecraft/1.4.6/statusEffectHUD.version";
     private final String      mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
     
     public mod_StatusEffectHUD()
     {
+        allowUpdateCheck = mod_bspkrsCore.allowUpdateCheck;
         if (allowUpdateCheck)
             versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic, ModLoader.getLogger());
     }
@@ -65,13 +65,19 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.8(1.4.6)";
+        return "v1.9(1.4.6)";
+    }
+    
+    @Override
+    public String getPriorities()
+    {
+        return "after:mod_bspkrsCore";
     }
     
     @Override
     public void load()
     {
-        if (allowUpdateCheck)
+        if (allowUpdateCheck && versionChecker != null)
             versionChecker.checkVersionWithLogging();
         
         ModLoader.setInGameHook(this, true, false);
@@ -86,7 +92,7 @@ public class mod_StatusEffectHUD extends BaseMod
             displayStatusEffects(mc);
         }
         
-        if (allowUpdateCheck)
+        if (allowUpdateCheck && versionChecker != null)
         {
             if (!versionChecker.isCurrentVersion())
                 for (String msg : versionChecker.getInGameMessage())
