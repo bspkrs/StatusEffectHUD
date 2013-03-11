@@ -127,7 +127,6 @@ public class mod_StatusEffectHUD extends BaseMod
     private void displayStatusEffects(Minecraft mc)
     {
         Collection activeEffects = mc.thePlayer.getActivePotionEffects();
-        int guiTexture = mc.renderEngine.getTexture("/gui/inventory.png");
         
         if (!activeEffects.isEmpty())
         {
@@ -142,7 +141,7 @@ public class mod_StatusEffectHUD extends BaseMod
                 PotionEffect potionEffect = (PotionEffect) iteratorPotionEffect.next();
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                mc.renderEngine.bindTexture(guiTexture);
+                mc.renderEngine.func_98187_b("/gui/inventory.png");
                 int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
                 String potionName = "";
                 
