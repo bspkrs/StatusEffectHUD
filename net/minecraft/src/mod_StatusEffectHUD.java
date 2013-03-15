@@ -46,7 +46,7 @@ public class mod_StatusEffectHUD extends BaseMod
     
     private ModVersionChecker versionChecker;
     private boolean           allowUpdateCheck;
-    private final String      versionURL           = "https://dl.dropbox.com/u/20748481/Minecraft/1.4.6/statusEffectHUD.version";
+    private final String      versionURL           = "https://dl.dropbox.com/u/20748481/Minecraft/1.5.0/statusEffectHUD.version";
     private final String      mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
     
     public mod_StatusEffectHUD()
@@ -65,13 +65,13 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.9(1.4.6)";
+        return "v1.9(1.5.0)";
     }
     
     @Override
     public String getPriorities()
     {
-        return "after:mod_bspkrsCore";
+        return "required-after:mod_bspkrsCore";
     }
     
     @Override
@@ -86,7 +86,8 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public boolean onTickInGame(float f, Minecraft mc)
     {
-        if ((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) && !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
+        if ((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
+                !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
         {
             scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             displayStatusEffects(mc);
