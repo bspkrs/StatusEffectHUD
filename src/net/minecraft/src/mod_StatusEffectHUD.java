@@ -46,7 +46,7 @@ public class mod_StatusEffectHUD extends BaseMod
     
     private ModVersionChecker versionChecker;
     private boolean           allowUpdateCheck;
-    private final String      versionURL           = "http://bspk.rs/Minecraft/1.5.0/statusEffectHUD.version";
+    private final String      versionURL           = "http://bspk.rs/Minecraft/1.5.1/statusEffectHUD.version";
     private final String      mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
     
     public mod_StatusEffectHUD()
@@ -65,7 +65,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.9(1.5.0)";
+        return "v1.9(1.5.1)";
     }
     
     @Override
@@ -142,7 +142,7 @@ public class mod_StatusEffectHUD extends BaseMod
                 PotionEffect potionEffect = (PotionEffect) iteratorPotionEffect.next();
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                mc.renderEngine.func_98187_b("/gui/inventory.png");
+                mc.renderEngine.bindTexture("/gui/inventory.png");
                 int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
                 String potionName = "";
                 
