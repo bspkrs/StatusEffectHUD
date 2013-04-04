@@ -53,7 +53,7 @@ public class mod_StatusEffectHUD extends BaseMod
     {
         allowUpdateCheck = mod_bspkrsCore.allowUpdateCheck;
         if (allowUpdateCheck)
-            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic, ModLoader.getLogger());
+            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic);
     }
     
     @Override
