@@ -13,35 +13,37 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
+import bspkrs.util.BSProp;
+import bspkrs.util.BSPropRegistry;
 import bspkrs.util.ModVersionChecker;
 
 public class mod_StatusEffectHUD extends BaseMod
 {
     protected float           zLevel               = 0.0F;
     private ScaledResolution  scaledResolution;
-    @MLProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
+    @BSProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
     public static String      alignMode            = "topleft";
     // @MLProp(info="Valid list mode strings are horizontal and vertical")
     // public static String listMode = "vertical";
-    @MLProp(info = "Set to true to see the effect background box, false to disable")
+    @BSProp(info = "Set to true to see the effect background box, false to disable")
     public static boolean     enableBackground     = false;
-    @MLProp(info = "Set to true to show effect names, false to disable")
+    @BSProp(info = "Set to true to show effect names, false to disable")
     public static boolean     enableEffectName     = true;
-    @MLProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png)")
+    @BSProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png)")
     public static String      effectNameColor      = "f";
-    @MLProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png)")
+    @BSProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png)")
     public static String      durationColor        = "f";
-    @MLProp(info = "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen)")
+    @BSProp(info = "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen)")
     public static int         xOffset              = 2;
-    @MLProp(info = "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen)")
+    @BSProp(info = "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen)")
     public static int         yOffset              = 2;
-    @MLProp(info = "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD")
+    @BSProp(info = "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD")
     public static int         yOffsetBottomCenter  = 41;
-    @MLProp(info = "Set to true if you want the xOffset value to be applied when using a center alignment")
+    @BSProp(info = "Set to true if you want the xOffset value to be applied when using a center alignment")
     public static boolean     applyXOffsetToCenter = false;
-    @MLProp(info = "Set to true if you want the yOffset value to be applied when using a middle alignment")
+    @BSProp(info = "Set to true if you want the yOffset value to be applied when using a middle alignment")
     public static boolean     applyYOffsetToMiddle = false;
-    @MLProp(info = "Set to true to show info when chat is open, false to disable info when chat is open\n\n**ONLY EDIT WHAT IS BELOW THIS**")
+    @BSProp(info = "Set to true to show info when chat is open, false to disable info when chat is open\n\n**ONLY EDIT WHAT IS BELOW THIS**")
     public static boolean     showInChat           = true;
     
     private ModVersionChecker versionChecker;
@@ -51,9 +53,7 @@ public class mod_StatusEffectHUD extends BaseMod
     
     public mod_StatusEffectHUD()
     {
-        allowUpdateCheck = mod_bspkrsCore.allowUpdateCheck;
-        if (allowUpdateCheck)
-            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic);
+        BSPropRegistry.registerPropHandler(this.getClass());
     }
     
     @Override
@@ -65,7 +65,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.9(1.5.1)";
+        return "v1.10(1.5.1)";
     }
     
     @Override
@@ -77,8 +77,12 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public void load()
     {
-        if (allowUpdateCheck && versionChecker != null)
+        allowUpdateCheck = mod_bspkrsCore.allowUpdateCheck;
+        if (allowUpdateCheck)
+        {
+            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic);
             versionChecker.checkVersionWithLogging();
+        }
         
         ModLoader.setInGameHook(this, true, false);
     }
@@ -162,6 +166,7 @@ public class mod_StatusEffectHUD extends BaseMod
                     {
                         potionName = potionName + " IV";
                     }
+                    GL11.glBindTexture(3553, mc.renderEngine.getTexture("/font/default.png"));
                     
                     xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth(potionName));
                 }
@@ -179,6 +184,7 @@ public class mod_StatusEffectHUD extends BaseMod
                         int potionStatusIcon = potion.getStatusIconIndex();
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? -24 : -18), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
+                    GL11.glBindTexture(3553, mc.renderEngine.getTexture("/font/default.png"));
                     int stringWidth = mc.fontRenderer.getStringWidth(potionName);
                     mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0), 0xffffff);
                     stringWidth = mc.fontRenderer.getStringWidth(effectDuration);
@@ -191,6 +197,7 @@ public class mod_StatusEffectHUD extends BaseMod
                         int potionStatusIcon = potion.getStatusIconIndex();
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? 6 : 0), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
+                    GL11.glBindTexture(3553, mc.renderEngine.getTexture("/font/default.png"));
                     mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0), 0xffffff);
                     mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
                 }
