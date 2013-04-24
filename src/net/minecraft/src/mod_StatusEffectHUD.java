@@ -93,8 +93,12 @@ public class mod_StatusEffectHUD extends BaseMod
         if ((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
                 !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
         {
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            mc.renderEngine.resetBoundTexture();
             scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             displayStatusEffects(mc);
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            mc.renderEngine.resetBoundTexture();
         }
         
         if (allowUpdateCheck && versionChecker != null)
@@ -103,7 +107,9 @@ public class mod_StatusEffectHUD extends BaseMod
                 for (String msg : versionChecker.getInGameMessage())
                     mc.thePlayer.addChatMessage(msg);
             allowUpdateCheck = false;
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
+        
         return true;
     }
     
@@ -166,7 +172,6 @@ public class mod_StatusEffectHUD extends BaseMod
                     {
                         potionName = potionName + " IV";
                     }
-                    GL11.glBindTexture(3553, mc.renderEngine.getTexture("/font/default.png"));
                     
                     xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth(potionName));
                 }
@@ -184,7 +189,6 @@ public class mod_StatusEffectHUD extends BaseMod
                         int potionStatusIcon = potion.getStatusIconIndex();
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? -24 : -18), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
-                    GL11.glBindTexture(3553, mc.renderEngine.getTexture("/font/default.png"));
                     int stringWidth = mc.fontRenderer.getStringWidth(potionName);
                     mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0), 0xffffff);
                     stringWidth = mc.fontRenderer.getStringWidth(effectDuration);
@@ -197,7 +201,6 @@ public class mod_StatusEffectHUD extends BaseMod
                         int potionStatusIcon = potion.getStatusIconIndex();
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? 6 : 0), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
-                    GL11.glBindTexture(3553, mc.renderEngine.getTexture("/font/default.png"));
                     mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0), 0xffffff);
                     mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
                 }
