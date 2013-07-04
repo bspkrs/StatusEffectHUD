@@ -6,6 +6,7 @@ import java.util.Iterator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.StatCollector;
@@ -20,11 +21,11 @@ import bspkrs.util.ModVersionChecker;
 
 public class mod_StatusEffectHUD extends BaseMod
 {
-    protected float           zLevel               = 0.0F;
+    protected float           zLevel               = 100.0F;
     private ScaledResolution  scaledResolution;
     @BSProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
-    public static String      alignMode            = "topleft";
-    // @MLProp(info="Valid list mode strings are horizontal and vertical")
+    public static String      alignMode            = "middleright";
+    // @BSProp(info="Valid list mode strings are horizontal and vertical")
     // public static String listMode = "vertical";
     @BSProp(info = "Set to true to see the effect background box, false to disable")
     public static boolean     enableBackground     = false;
@@ -66,7 +67,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.10(" + Const.MCVERSION + ")";
+        return "v1.11(" + Const.MCVERSION + ")";
     }
     
     @Override
@@ -95,11 +96,11 @@ public class mod_StatusEffectHUD extends BaseMod
                 !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
         {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            mc.renderEngine.resetBoundTexture();
+            //mc.renderEngine.resetBoundTexture();
             scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             displayStatusEffects(mc);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            mc.renderEngine.resetBoundTexture();
+            //mc.renderEngine.resetBoundTexture();
         }
         
         if (allowUpdateCheck && versionChecker != null)
@@ -153,7 +154,8 @@ public class mod_StatusEffectHUD extends BaseMod
                 PotionEffect potionEffect = (PotionEffect) iteratorPotionEffect.next();
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                mc.renderEngine.bindTexture("/gui/inventory.png");
+                // bindTexture()
+                mc.renderEngine.func_110577_a(new ResourceLocation("textures/gui/container/inventory.png"));
                 int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
                 String potionName = "";
                 
