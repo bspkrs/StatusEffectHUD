@@ -50,7 +50,7 @@ public class mod_StatusEffectHUD extends BaseMod
     
     private ModVersionChecker versionChecker;
     private boolean           allowUpdateCheck;
-    private final String      versionURL           = "http://bspk.rs/Minecraft/" + Const.MCVERSION + "/statusEffectHUD.version";
+    private final String      versionURL           = Const.VERSION_URL + "/Minecraft/" + Const.MCVERSION + "/statusEffectHUD.version";
     private final String      mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
     
     public mod_StatusEffectHUD()
@@ -67,7 +67,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.11(" + Const.MCVERSION + ")";
+        return "v1.12(" + Const.MCVERSION + ")";
     }
     
     @Override
