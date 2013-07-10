@@ -67,7 +67,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.12(" + Const.MCVERSION + ")";
+        return "v1.13(" + Const.MCVERSION + ")";
     }
     
     @Override
@@ -154,8 +154,9 @@ public class mod_StatusEffectHUD extends BaseMod
                 PotionEffect potionEffect = (PotionEffect) iteratorPotionEffect.next();
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                // bindTexture()
-                mc.renderEngine.func_110577_a(new ResourceLocation("textures/gui/container/inventory.png"));
+                // func_110434_K = getTextureManager()
+                // func_110577_a = bindTexture()
+                mc.func_110434_K().func_110577_a(new ResourceLocation("textures/gui/container/inventory.png"));
                 int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
                 String potionName = "";
                 
