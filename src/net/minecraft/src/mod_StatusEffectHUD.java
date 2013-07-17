@@ -21,7 +21,7 @@ import bspkrs.util.ModVersionChecker;
 
 public class mod_StatusEffectHUD extends BaseMod
 {
-    protected float           zLevel               = 100.0F;
+    protected float           zLevel               = -150.0F;
     private ScaledResolution  scaledResolution;
     @BSProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
     public static String      alignMode            = "middleright";
@@ -67,7 +67,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.13(" + Const.MCVERSION + ")";
+        return "v1.14(" + Const.MCVERSION + ")";
     }
     
     @Override
@@ -139,7 +139,7 @@ public class mod_StatusEffectHUD extends BaseMod
     
     private void displayStatusEffects(Minecraft mc)
     {
-        Collection activeEffects = mc.thePlayer.getActivePotionEffects();
+        Collection<?> activeEffects = mc.thePlayer.getActivePotionEffects();
         
         if (!activeEffects.isEmpty())
         {
@@ -149,7 +149,7 @@ public class mod_StatusEffectHUD extends BaseMod
             
             int yBase = getY(activeEffects.size(), yOffset);
             
-            for (Iterator iteratorPotionEffect = activeEffects.iterator(); iteratorPotionEffect.hasNext(); yBase += yOffset)
+            for (Iterator<?> iteratorPotionEffect = activeEffects.iterator(); iteratorPotionEffect.hasNext(); yBase += yOffset)
             {
                 PotionEffect potionEffect = (PotionEffect) iteratorPotionEffect.next();
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
