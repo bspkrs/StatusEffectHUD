@@ -101,7 +101,7 @@
         <!-- build the zip -->
         <zip destfile="${release.home}/${release.zip}">
             <fileset dir="${mcp.bin}" includes="mod_${mod.id}.class"/>
-            <fileset dir="${dev.resources}" excludes="mcmod.template"/>
+            <fileset dir="${dev.resources}" excludes="mcmod.template,template.pack.mcmeta"/>
             <mappedresources>
                 <concat>
                     <fileset dir="${dev.resources}" includes="mcmod.template"/>
