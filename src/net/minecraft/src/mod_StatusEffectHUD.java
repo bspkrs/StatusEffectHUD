@@ -156,7 +156,7 @@ public class mod_StatusEffectHUD extends BaseMod
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 // func_110434_K = getTextureManager()
                 // func_110577_a = bindTexture()
-                mc.func_110434_K().func_110577_a(new ResourceLocation("textures/gui/container/inventory.png"));
+                mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/inventory.png"));
                 int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
                 String potionName = "";
                 
