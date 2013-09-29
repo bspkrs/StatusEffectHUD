@@ -1,3 +1,7 @@
+v1.16 (29-Sep-2013)
+- added code to prevent blinking if the max duration is less than 20 seconds
+v1.15 (26-Sep-2013)
+- added blinking effect when a potion is almost gone (2 new options)
 v1.14 (17-Jul-2013)
 - fixed background covering up the text
 - 1.6.4 update (20-Sep-2013)
