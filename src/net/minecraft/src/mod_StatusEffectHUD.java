@@ -242,7 +242,7 @@ public class mod_StatusEffectHUD extends BaseMod
             // See if any potions have expired... if they have, remove them from the map
             for (PotionEffect pe : potionMaxDurationMap.keySet())
                 if (!activeEffects.contains(pe))
-                    potionMaxDurationMap.remove(pe);
+                    potionMaxDurationMap.put(pe, new Integer(0));
         }
     }
 }
