@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
@@ -76,7 +78,7 @@ public class mod_StatusEffectHUD extends BaseMod
     @Override
     public String getVersion()
     {
-        return "v1.16(" + Const.MCVERSION + ")";
+        return "v1.17(" + Const.MCVERSION + ")";
     }
     
     @Override
@@ -240,9 +242,14 @@ public class mod_StatusEffectHUD extends BaseMod
             }
             
             // See if any potions have expired... if they have, remove them from the map
+            List<PotionEffect> toRemove = new LinkedList<PotionEffect>();
+            
             for (PotionEffect pe : potionMaxDurationMap.keySet())
                 if (!activeEffects.contains(pe))
-                    potionMaxDurationMap.put(pe, new Integer(0));
+                    toRemove.add(pe);
+            
+            for (PotionEffect pe : toRemove)
+                potionMaxDurationMap.remove(pe);
         }
     }
 }

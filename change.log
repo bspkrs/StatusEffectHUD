@@ -1,3 +1,5 @@
+v1.17 (05-Oct-2013)
+- fixed potential concurrent modification exception
 v1.16 (29-Sep-2013)
 - added code to prevent blinking if the max duration is less than 20 seconds
 v1.15 (26-Sep-2013)
