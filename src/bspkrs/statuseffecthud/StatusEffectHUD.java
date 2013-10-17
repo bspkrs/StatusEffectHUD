@@ -1,5 +1,6 @@
-package net.minecraft.src;
+package bspkrs.statuseffecthud;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,90 +19,82 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
-import bspkrs.util.BSProp;
-import bspkrs.util.BSPropRegistry;
+import bspkrs.util.CommonUtils;
+import bspkrs.util.Configuration;
 import bspkrs.util.Const;
-import bspkrs.util.ModVersionChecker;
 
-public class mod_StatusEffectHUD extends BaseMod
+public class StatusEffectHUD
 {
-    protected float                    zLevel               = -150.0F;
-    private ScaledResolution           scaledResolution;
-    @BSProp(info = "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter (not recommended), bottomright")
-    public static String               alignMode            = "middleright";
+    public static final String                VERSION_NUMBER       = "v1.18(" + Const.MCVERSION + ")";
+    
+    protected static float                    zLevel               = -150.0F;
+    private static ScaledResolution           scaledResolution;
+    
+    // Config fields
+    public static String                      alignMode            = "middleright";
     // @BSProp(info="Valid list mode strings are horizontal and vertical")
     // public static String listMode = "vertical";
-    @BSProp(info = "Set to true to see the effect background box, false to disable.")
-    public static boolean              enableBackground     = false;
-    @BSProp(info = "Set to true to show effect names, false to disable.")
-    public static boolean              enableEffectName     = true;
-    @BSProp(info = "Set to true to enable blinking for the icon when a potion/effect is nearly gone, false to disable.")
-    public static boolean              enableIconBlink      = true;
-    @BSProp(info = "When a potion/effect has this many seconds remaining the timer will begin to blink.")
-    public static int                  durationBlinkSeconds = 10;
-    @BSProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).")
-    public static String               effectNameColor      = "f";
-    @BSProp(info = "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).")
-    public static String               durationColor        = "f";
-    @BSProp(info = "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen).")
-    public static int                  xOffset              = 2;
-    @BSProp(info = "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen).")
-    public static int                  yOffset              = 2;
-    @BSProp(info = "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD.")
-    public static int                  yOffsetBottomCenter  = 41;
-    @BSProp(info = "Set to true if you want the xOffset value to be applied when using a center alignment.")
-    public static boolean              applyXOffsetToCenter = false;
-    @BSProp(info = "Set to true if you want the yOffset value to be applied when using a middle alignment.")
-    public static boolean              applyYOffsetToMiddle = false;
-    @BSProp(info = "Set to true to show info when chat is open, false to disable info when chat is open.\n\n**ONLY EDIT WHAT IS BELOW THIS**")
-    public static boolean              showInChat           = true;
+    public static boolean                     enableBackground     = false;
+    public static boolean                     enableEffectName     = true;
+    public static boolean                     enableIconBlink      = true;
+    public static int                         durationBlinkSeconds = 10;
+    public static String                      effectNameColor      = "f";
+    public static String                      durationColor        = "f";
+    public static int                         xOffset              = 2;
+    public static int                         yOffset              = 2;
+    public static int                         yOffsetBottomCenter  = 41;
+    public static boolean                     applyXOffsetToCenter = false;
+    public static boolean                     applyYOffsetToMiddle = false;
+    public static boolean                     showInChat           = true;
     
-    private ModVersionChecker          versionChecker;
-    private boolean                    allowUpdateCheck;
-    private final String               versionURL           = Const.VERSION_URL + "/Minecraft/" + Const.MCVERSION + "/statusEffectHUD.version";
-    private final String               mcfTopic             = "http://www.minecraftforum.net/topic/1114612-";
+    private static Map<PotionEffect, Integer> potionMaxDurationMap = new HashMap<PotionEffect, Integer>();
+    private static Configuration              config;
     
-    private Map<PotionEffect, Integer> potionMaxDurationMap;
-    
-    public mod_StatusEffectHUD()
+    public static void loadConfig(File file)
     {
-        BSPropRegistry.registerPropHandler(this.getClass());
-        potionMaxDurationMap = new HashMap<PotionEffect, Integer>();
-    }
-    
-    @Override
-    public String getName()
-    {
-        return "StatusEffectHUD";
-    }
-    
-    @Override
-    public String getVersion()
-    {
-        return "v1.17(" + Const.MCVERSION + ")";
-    }
-    
-    @Override
-    public String getPriorities()
-    {
-        return "required-after:mod_bspkrsCore";
-    }
-    
-    @Override
-    public void load()
-    {
-        allowUpdateCheck = mod_bspkrsCore.allowUpdateCheck;
-        if (allowUpdateCheck)
-        {
-            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic);
-            versionChecker.checkVersionWithLogging();
+        String ctgyGen = Configuration.CATEGORY_GENERAL;
+        
+        if (!CommonUtils.isObfuscatedEnv())
+        { // debug settings for deobfuscated execution
+          //            if (file.exists())
+          //                file.delete();
         }
         
-        ModLoader.setInGameHook(this, true, false);
+        config = new Configuration(file);
+        
+        config.load();
+        
+        alignMode = config.getString("alignMode", ctgyGen, alignMode,
+                "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter, bottomright");
+        enableBackground = config.getBoolean("enableBackground", ctgyGen, enableBackground,
+                "Set to true to see the effect background box, false to disable.");
+        enableEffectName = config.getBoolean("enableEffectName", ctgyGen, enableEffectName,
+                "Set to true to show effect names, false to disable.");
+        enableIconBlink = config.getBoolean("enableIconBlink", ctgyGen, enableIconBlink,
+                "Set to true to enable blinking for the icon when a potion/effect is nearly gone, false to disable.");
+        durationBlinkSeconds = config.getInt("durationBlinkSeconds", ctgyGen, durationBlinkSeconds, -1, 60,
+                "When a potion/effect has this many seconds remaining the timer will begin to blink. Set to -1 to disable blinking.");
+        effectNameColor = config.getString("effectNameColor", ctgyGen, effectNameColor,
+                "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).");
+        durationColor = config.getString("durationColor", ctgyGen, durationColor,
+                "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).");
+        xOffset = config.getInt("xOffset", ctgyGen, xOffset, 0, Integer.MAX_VALUE,
+                "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen)");
+        yOffset = config.getInt("yOffset", ctgyGen, yOffset, 0, Integer.MAX_VALUE,
+                "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen)");
+        yOffsetBottomCenter = config.getInt("yOffsetBottomCenter", ctgyGen, yOffsetBottomCenter, 0, Integer.MAX_VALUE,
+                "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD");
+        applyXOffsetToCenter = config.getBoolean("applyXOffsetToCenter", ctgyGen, applyXOffsetToCenter,
+                "Set to true if you want the xOffset value to be applied when using a center alignment");
+        applyYOffsetToMiddle = config.getBoolean("applyYOffsetToMiddle", ctgyGen, applyYOffsetToMiddle,
+                "Set to true if you want the yOffset value to be applied when using a middle alignment");
+        showInChat = config.getBoolean("showInChat", ctgyGen, showInChat,
+                "Set to true to show info when chat is open, false to disable info when chat is open");
+        
+        config.save();
     }
     
-    @Override
-    public boolean onTickInGame(float f, Minecraft mc)
+    public static boolean onTickInGame(Minecraft mc)
     {
         if ((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
                 !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
@@ -114,19 +107,10 @@ public class mod_StatusEffectHUD extends BaseMod
             //mc.renderEngine.resetBoundTexture();
         }
         
-        if (allowUpdateCheck && versionChecker != null)
-        {
-            if (!versionChecker.isCurrentVersion())
-                for (String msg : versionChecker.getInGameMessage())
-                    mc.thePlayer.addChatMessage(msg);
-            allowUpdateCheck = false;
-            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-        
         return true;
     }
     
-    private int getX(int width)
+    private static int getX(int width)
     {
         if (alignMode.equalsIgnoreCase("topcenter") || alignMode.equalsIgnoreCase("middlecenter") || alignMode.equalsIgnoreCase("bottomcenter"))
             return scaledResolution.getScaledWidth() / 2 - width / 2 + (applyXOffsetToCenter ? xOffset : 0);
@@ -136,7 +120,7 @@ public class mod_StatusEffectHUD extends BaseMod
             return xOffset;
     }
     
-    private int getY(int rowCount, int height)
+    private static int getY(int rowCount, int height)
     {
         if (alignMode.equalsIgnoreCase("middleleft") || alignMode.equalsIgnoreCase("middlecenter") || alignMode.equalsIgnoreCase("middleright"))
             return (scaledResolution.getScaledHeight() / 2) - ((rowCount * height) / 2) + (applyYOffsetToMiddle ? yOffset : 0);
@@ -148,7 +132,7 @@ public class mod_StatusEffectHUD extends BaseMod
             return yOffset;
     }
     
-    private boolean shouldRender(PotionEffect pe, int ticksLeft, int thresholdSeconds)
+    private static boolean shouldRender(PotionEffect pe, int ticksLeft, int thresholdSeconds)
     {
         if (potionMaxDurationMap.get(pe).intValue() > 400)
             if (ticksLeft / 20 <= thresholdSeconds)
@@ -157,7 +141,7 @@ public class mod_StatusEffectHUD extends BaseMod
         return true;
     }
     
-    private void displayStatusEffects(Minecraft mc)
+    private static void displayStatusEffects(Minecraft mc)
     {
         Collection<?> activeEffects = mc.thePlayer.getActivePotionEffects();
         
