@@ -101,7 +101,8 @@
         <!-- build the zip -->
         <zip destfile="${release.home}/${release.zip}">
             <fileset dir="${mcp.bin}" includes="bspkrs/statuseffecthud/**/*.class"/>
-            <fileset dir="${dev.resources}" excludes="mcmod.template,template.pack.mcmeta"/>
+            <fileset dir="${dev.resources}" excludes="mcmod.template"/>
+            <fileset dir="${mcp.home}/.." includes="forgeversion.properties"/>
             <mappedresources>
                 <concat>
                     <fileset dir="${dev.resources}" includes="mcmod.template"/>
