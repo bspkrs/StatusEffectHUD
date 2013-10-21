@@ -25,7 +25,7 @@ import bspkrs.util.Const;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER       = "v1.18(" + Const.MCVERSION + ")";
+    public static final String                VERSION_NUMBER       = "v1.19(" + Const.MCVERSION + ")";
     
     protected static float                    zLevel               = -150.0F;
     private static ScaledResolution           scaledResolution;
@@ -78,9 +78,9 @@ public class StatusEffectHUD
                 "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).");
         durationColor = config.getString("durationColor", ctgyGen, durationColor,
                 "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).");
-        xOffset = config.getInt("xOffset", ctgyGen, xOffset, 0, Integer.MAX_VALUE,
+        xOffset = config.getInt("xOffset", ctgyGen, xOffset, Integer.MIN_VALUE, Integer.MAX_VALUE,
                 "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen)");
-        yOffset = config.getInt("yOffset", ctgyGen, yOffset, 0, Integer.MAX_VALUE,
+        yOffset = config.getInt("yOffset", ctgyGen, yOffset, Integer.MIN_VALUE, Integer.MAX_VALUE,
                 "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen)");
         yOffsetBottomCenter = config.getInt("yOffsetBottomCenter", ctgyGen, yOffsetBottomCenter, 0, Integer.MAX_VALUE,
                 "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD");
