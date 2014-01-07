@@ -11,11 +11,11 @@
     "authorList": [ "bspkrs" ],
     "credits": "",
     "logoFile": "",
-    "screenshots": [],
+    "screenshots": [  ],
     "parent": "",
     "requiredMods": [ "bspkrsCore" ],
     "dependencies": [ "bspkrsCore" ],
-    "dependants": [],
+    "dependants": [  ],
     "useDependencyInformation": "true"
   }]
 }
