@@ -1,6 +1,6 @@
 {
   "modListVersion": 2,
-  "modlist": [{
+  "modList": [{
     "modid": "StatusEffectHUD",
     "name": "StatusEffectHUD",
     "description": "Shows active player effects (potions, etc) without opening your inventory!",
