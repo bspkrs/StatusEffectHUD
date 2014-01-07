@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modlist": [{
+    "modid": "StatusEffectHUD",
+    "name": "StatusEffectHUD",
+    "description": "Shows active player effects (potions, etc) without opening your inventory!",
+    "version": "${mod_version}",
+    "mcversion": "${minecraft_version}",
+    "url": "http://www.minecraftforum.net/topic/1114612-/",
+    "updateUrl": "",
+    "authorList": [ "bspkrs" ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": [ "bspkrsCore" ],
+    "dependencies": [ "bspkrsCore" ],
+    "dependants": [],
+    "useDependencyInformation": "true"
+  }]
+}
