@@ -1,78 +1,54 @@
 package bspkrs.statuseffecthud.fml;
 
-import java.util.EnumSet;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 import bspkrs.bspkrscore.fml.bspkrsCoreMod;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import bspkrs.helpers.entity.player.EntityPlayerHelper;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class SEHGameTicker implements ITickHandler
+@SideOnly(Side.CLIENT)
+public class SEHGameTicker
 {
-    private EnumSet<TickType> tickTypes        = EnumSet.noneOf(TickType.class);
-    private Minecraft         mc;
-    private boolean           allowUpdateCheck = bspkrsCoreMod.instance.allowUpdateCheck;
+    private Minecraft      mc;
+    private static boolean isRegistered = false;
     
-    public SEHGameTicker(EnumSet<TickType> tickTypes)
+    public SEHGameTicker()
     {
-        this.tickTypes = tickTypes;
+        isRegistered = true;
         mc = Minecraft.getMinecraft();
     }
     
-    @Override
-    public void tickStart(EnumSet<TickType> tickTypes, Object... tickData)
+    @SubscribeEvent
+    public void onTick(ClientTickEvent event)
     {
-        tick(tickTypes, true);
-    }
-    
-    @Override
-    public void tickEnd(EnumSet<TickType> tickTypes, Object... tickData)
-    {
-        tick(tickTypes, false);
-    }
-    
-    private void tick(EnumSet<TickType> tickTypes, boolean isStart)
-    {
-        for (TickType tickType : tickTypes)
-        {
-            if (!onTick(tickType, isStart))
-            {
-                this.tickTypes.remove(tickType);
-                this.tickTypes.removeAll(tickType.partnerTicks());
-            }
-        }
-    }
-    
-    public boolean onTick(TickType tick, boolean isStart)
-    {
-        if (isStart)
-        {
-            return true;
-        }
+        if (event.phase.equals(Phase.START))
+            return;
         
-        if (allowUpdateCheck && mc != null && mc.thePlayer != null)
+        boolean keepTicking = !(mc != null && mc.thePlayer != null && mc.theWorld != null);
+        
+        if (bspkrsCoreMod.instance.allowUpdateCheck && !keepTicking)
         {
-            if (StatusEffectHUDMod.instance.versionChecker != null)
+            if (bspkrsCoreMod.instance.allowUpdateCheck && StatusEffectHUDMod.instance.versionChecker != null)
                 if (!StatusEffectHUDMod.instance.versionChecker.isCurrentVersion())
                     for (String msg : StatusEffectHUDMod.instance.versionChecker.getInGameMessage())
-                        mc.thePlayer.addChatMessage(msg);
+                        EntityPlayerHelper.addChatMessage(mc.thePlayer, new ChatComponentText(msg));
             
-            return false;
         }
         
-        return allowUpdateCheck;
+        if (!keepTicking)
+        {
+            FMLCommonHandler.instance().bus().unregister(this);
+            isRegistered = false;
+        }
     }
     
-    @Override
-    public EnumSet<TickType> ticks()
+    public static boolean isRegistered()
     {
-        return tickTypes;
+        return isRegistered;
     }
-    
-    @Override
-    public String getLabel()
-    {
-        return "SEHGameTicker";
-    }
-    
 }

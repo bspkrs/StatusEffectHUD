@@ -15,17 +15,18 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.config.Configuration;
 
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
+import bspkrs.util.BSConfiguration;
 import bspkrs.util.CommonUtils;
-import bspkrs.util.Configuration;
 import bspkrs.util.Const;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER       = "v1.19(" + Const.MCVERSION + ")";
+    public static final String                VERSION_NUMBER       = "v1.20(" + Const.MCVERSION + ")";
     
     protected static float                    zLevel               = -150.0F;
     private static ScaledResolution           scaledResolution;
@@ -48,7 +49,7 @@ public class StatusEffectHUD
     public static boolean                     showInChat           = true;
     
     private static Map<PotionEffect, Integer> potionMaxDurationMap = new HashMap<PotionEffect, Integer>();
-    private static Configuration              config;
+    private static BSConfiguration            config;
     
     public static void loadConfig(File file)
     {
@@ -60,7 +61,7 @@ public class StatusEffectHUD
           //                file.delete();
         }
         
-        config = new Configuration(file);
+        config = new BSConfiguration(file);
         
         config.load();
         
@@ -97,14 +98,12 @@ public class StatusEffectHUD
     public static boolean onTickInGame(Minecraft mc)
     {
         if ((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
-                !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.pressed)
+                !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.func_151470_d())
         {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            //mc.renderEngine.resetBoundTexture();
             scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             displayStatusEffects(mc);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            //mc.renderEngine.resetBoundTexture();
         }
         
         return true;
@@ -163,8 +162,6 @@ public class StatusEffectHUD
                 
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                // func_110434_K = getTextureManager()
-                // func_110577_a = bindTexture()
                 mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/inventory.png"));
                 int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
                 String potionName = "";

@@ -1,21 +1,17 @@
 package bspkrs.statuseffecthud.fml;
 
-import java.util.EnumSet;
-
 import bspkrs.bspkrscore.fml.bspkrsCoreMod;
 import bspkrs.statuseffecthud.StatusEffectHUD;
 import bspkrs.util.Const;
 import bspkrs.util.ModVersionChecker;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
 import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = "StatusEffectHUD", name = "StatusEffectHUD", version = StatusEffectHUD.VERSION_NUMBER, dependencies = "required-after:bspkrsCore", useMetadata = true)
 public class StatusEffectHUDMod
@@ -46,7 +42,7 @@ public class StatusEffectHUDMod
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        TickRegistry.registerTickHandler(new SEHGameTicker(EnumSet.of(TickType.CLIENT)), Side.CLIENT);
-        TickRegistry.registerTickHandler(new SEHRenderTicker(EnumSet.of(TickType.RENDER)), Side.CLIENT);
+        FMLCommonHandler.instance().bus().register(new SEHGameTicker());
+        FMLCommonHandler.instance().bus().register(new SEHRenderTicker());
     }
 }
