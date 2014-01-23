@@ -20,13 +20,14 @@ import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
+import bspkrs.statuseffecthud.fml.StatusEffectHUDMod;
 import bspkrs.util.BSConfiguration;
 import bspkrs.util.CommonUtils;
 import bspkrs.util.Const;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER       = "v1.20(" + Const.MCVERSION + ")";
+    public static final String                VERSION_NUMBER       = "v1.21(" + Const.MCVERSION + ")";
     
     protected static float                    zLevel               = -150.0F;
     private static ScaledResolution           scaledResolution;
@@ -97,7 +98,7 @@ public class StatusEffectHUD
     
     public static boolean onTickInGame(Minecraft mc)
     {
-        if ((mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
+        if (StatusEffectHUDMod.instance.isEnabled() && (mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
                 !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.func_151470_d())
         {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

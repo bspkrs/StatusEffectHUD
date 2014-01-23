@@ -20,6 +20,8 @@ public class StatusEffectHUDMod
     private final String             versionURL = Const.VERSION_URL + "/Minecraft/" + Const.MCVERSION + "/statusEffectHUD.version";
     private final String             mcfTopic   = "http://www.minecraftforum.net/topic/1114612-";
     
+    private boolean                  isEnabled  = true;
+    
     @Metadata(value = "StatusEffectHUD")
     public static ModMetadata        metadata;
     
@@ -44,5 +46,15 @@ public class StatusEffectHUDMod
     {
         FMLCommonHandler.instance().bus().register(new SEHGameTicker());
         FMLCommonHandler.instance().bus().register(new SEHRenderTicker());
+    }
+    
+    public void setEnabled(boolean bol)
+    {
+        isEnabled = bol;
+    }
+    
+    public boolean isEnabled()
+    {
+        return isEnabled;
     }
 }
