@@ -27,7 +27,7 @@ import bspkrs.util.Const;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER       = "v1.21(" + Const.MCVERSION + ")";
+    public static final String                VERSION_NUMBER       = "1.21(" + Const.MCVERSION + ")";
     
     protected static float                    zLevel               = -150.0F;
     private static ScaledResolution           scaledResolution;
