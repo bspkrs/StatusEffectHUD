@@ -99,7 +99,7 @@ public class StatusEffectHUD
     public static boolean onTickInGame(Minecraft mc)
     {
         if (StatusEffectHUDMod.instance.isEnabled() && (mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
-                !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.func_151470_d())
+                !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.isPressed())
         {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
