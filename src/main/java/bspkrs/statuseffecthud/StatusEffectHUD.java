@@ -15,19 +15,18 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.config.Configuration;
 
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
 import bspkrs.statuseffecthud.fml.StatusEffectHUDMod;
-import bspkrs.util.BSConfiguration;
 import bspkrs.util.CommonUtils;
 import bspkrs.util.Const;
+import bspkrs.util.config.Configuration;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER       = "1.21(" + Const.MCVERSION + ")";
+    public static final String                VERSION_NUMBER       = "1.22(" + Const.MCVERSION + ")";
     
     protected static float                    zLevel               = -150.0F;
     private static ScaledResolution           scaledResolution;
@@ -50,7 +49,7 @@ public class StatusEffectHUD
     public static boolean                     showInChat           = true;
     
     private static Map<PotionEffect, Integer> potionMaxDurationMap = new HashMap<PotionEffect, Integer>();
-    private static BSConfiguration            config;
+    private static Configuration              config;
     
     public static void loadConfig(File file)
     {
@@ -62,7 +61,7 @@ public class StatusEffectHUD
           //                file.delete();
         }
         
-        config = new BSConfiguration(file);
+        config = new Configuration(file);
         
         config.load();
         
