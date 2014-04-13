@@ -19,42 +19,59 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
-import bspkrs.statuseffecthud.fml.StatusEffectHUDMod;
 import bspkrs.util.CommonUtils;
 import bspkrs.util.Const;
 import bspkrs.util.config.Configuration;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER       = "1.22(" + Const.MCVERSION + ")";
+    public static final String                VERSION_NUMBER              = "1.22(" + Const.MCVERSION + ")";
     
-    protected static float                    zLevel               = -150.0F;
+    protected static float                    zLevel                      = -150.0F;
     private static ScaledResolution           scaledResolution;
     
     // Config fields
-    public static String                      alignMode            = "middleright";
+    private final static boolean              enabledDefault              = true;
+    public static boolean                     enabled                     = enabledDefault;
+    private final static String               alignModeDefault            = "middleright";
+    public static String                      alignMode                   = alignModeDefault;
     // @BSProp(info="Valid list mode strings are horizontal and vertical")
     // public static String listMode = "vertical";
-    public static boolean                     enableBackground     = false;
-    public static boolean                     enableEffectName     = true;
-    public static boolean                     enableIconBlink      = true;
-    public static int                         durationBlinkSeconds = 10;
-    public static String                      effectNameColor      = "f";
-    public static String                      durationColor        = "f";
-    public static int                         xOffset              = 2;
-    public static int                         yOffset              = 2;
-    public static int                         yOffsetBottomCenter  = 41;
-    public static boolean                     applyXOffsetToCenter = false;
-    public static boolean                     applyYOffsetToMiddle = false;
-    public static boolean                     showInChat           = true;
+    private final static boolean              enableBackgroundDefault     = false;
+    public static boolean                     enableBackground            = enableBackgroundDefault;
+    private final static boolean              enableEffectNameDefault     = true;
+    public static boolean                     enableEffectName            = enableEffectNameDefault;
+    private final static boolean              enableIconBlinkDefault      = true;
+    public static boolean                     enableIconBlink             = enableIconBlinkDefault;
+    private final static int                  durationBlinkSecondsDefault = 10;
+    public static int                         durationBlinkSeconds        = durationBlinkSecondsDefault;
+    private final static String               effectNameColorDefault      = "f";
+    public static String                      effectNameColor             = effectNameColorDefault;
+    private final static String               durationColorDefault        = "f";
+    public static String                      durationColor               = durationColorDefault;
+    private final static int                  xOffsetDefault              = 2;
+    public static int                         xOffset                     = xOffsetDefault;
+    private final static int                  yOffsetDefault              = 2;
+    public static int                         yOffset                     = yOffsetDefault;
+    private final static int                  yOffsetBottomCenterDefault  = 41;
+    public static int                         yOffsetBottomCenter         = yOffsetBottomCenterDefault;
+    private final static boolean              applyXOffsetToCenterDefault = false;
+    public static boolean                     applyXOffsetToCenter        = applyXOffsetToCenterDefault;
+    private final static boolean              applyYOffsetToMiddleDefault = false;
+    public static boolean                     applyYOffsetToMiddle        = applyYOffsetToMiddleDefault;
+    private final static boolean              showInChatDefault           = true;
+    public static boolean                     showInChat                  = showInChatDefault;
     
-    private static Map<PotionEffect, Integer> potionMaxDurationMap = new HashMap<PotionEffect, Integer>();
+    private static Map<PotionEffect, Integer> potionMaxDurationMap        = new HashMap<PotionEffect, Integer>();
     private static Configuration              config;
+    
+    public static Configuration getConfig()
+    {
+        return config;
+    }
     
     public static void loadConfig(File file)
     {
-        String ctgyGen = Configuration.CATEGORY_GENERAL;
-        
         if (!CommonUtils.isObfuscatedEnv())
         { // debug settings for deobfuscated execution
           //            if (file.exists())
@@ -63,41 +80,54 @@ public class StatusEffectHUD
         
         config = new Configuration(file);
         
+        syncConfig();
+    }
+    
+    public static void syncConfig()
+    {
+        String ctgyGen = Configuration.CATEGORY_GENERAL;
+        
         config.load();
         
-        alignMode = config.getString("alignMode", ctgyGen, alignMode,
-                "Valid alignment strings are topleft, topcenter, topright, middleleft, middlecenter, middleright, bottomleft, bottomcenter, bottomright");
-        enableBackground = config.getBoolean("enableBackground", ctgyGen, enableBackground,
-                "Set to true to see the effect background box, false to disable.");
-        enableEffectName = config.getBoolean("enableEffectName", ctgyGen, enableEffectName,
-                "Set to true to show effect names, false to disable.");
-        enableIconBlink = config.getBoolean("enableIconBlink", ctgyGen, enableIconBlink,
-                "Set to true to enable blinking for the icon when a potion/effect is nearly gone, false to disable.");
-        durationBlinkSeconds = config.getInt("durationBlinkSeconds", ctgyGen, durationBlinkSeconds, -1, 60,
-                "When a potion/effect has this many seconds remaining the timer will begin to blink. Set to -1 to disable blinking.");
-        effectNameColor = config.getString("effectNameColor", ctgyGen, effectNameColor,
-                "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).");
-        durationColor = config.getString("durationColor", ctgyGen, durationColor,
-                "Valid color values are 0-9, a-f (color values can be found here: http://www.minecraftwiki.net/wiki/File:Colors.png).");
-        xOffset = config.getInt("xOffset", ctgyGen, xOffset, Integer.MIN_VALUE, Integer.MAX_VALUE,
-                "Horizontal offset from the edge of the screen (when using right alignments the x offset is relative to the right edge of the screen)");
-        yOffset = config.getInt("yOffset", ctgyGen, yOffset, Integer.MIN_VALUE, Integer.MAX_VALUE,
-                "Vertical offset from the edge of the screen (when using bottom alignments the y offset is relative to the bottom edge of the screen)");
-        yOffsetBottomCenter = config.getInt("yOffsetBottomCenter", ctgyGen, yOffsetBottomCenter, 0, Integer.MAX_VALUE,
-                "Vertical offset used only for the bottomcenter alignment to avoid the vanilla HUD");
-        applyXOffsetToCenter = config.getBoolean("applyXOffsetToCenter", ctgyGen, applyXOffsetToCenter,
-                "Set to true if you want the xOffset value to be applied when using a center alignment");
-        applyYOffsetToMiddle = config.getBoolean("applyYOffsetToMiddle", ctgyGen, applyYOffsetToMiddle,
-                "Set to true if you want the yOffset value to be applied when using a middle alignment");
-        showInChat = config.getBoolean("showInChat", ctgyGen, showInChat,
-                "Set to true to show info when chat is open, false to disable info when chat is open");
+        config.addCustomCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
+                "Type the command '/statuseffect config' without the quotes in-game to modify these settings.");
+        
+        enabled = config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault, ConfigElement.ENABLED.desc(),
+                ConfigElement.ENABLED.languageKey());
+        alignMode = config.getString(ConfigElement.ALIGN_MODE.key(), ctgyGen, alignModeDefault, ConfigElement.ALIGN_MODE.desc(),
+                ConfigElement.ALIGN_MODE.validStrings(), ConfigElement.ALIGN_MODE.languageKey());
+        enableBackground = config.getBoolean(ConfigElement.ENABLE_BACKGROUND.key(), ctgyGen, enableBackgroundDefault, ConfigElement.ENABLE_BACKGROUND.desc(),
+                ConfigElement.ENABLE_BACKGROUND.languageKey());
+        enableEffectName = config.getBoolean(ConfigElement.ENABLE_EFFECT_NAME.key(), ctgyGen, enableEffectNameDefault, ConfigElement.ENABLE_EFFECT_NAME.desc(),
+                ConfigElement.ENABLE_EFFECT_NAME.languageKey());
+        enableIconBlink = config.getBoolean(ConfigElement.ENABLE_ICON_BLINK.key(), ctgyGen, enableIconBlinkDefault,
+                ConfigElement.ENABLE_ICON_BLINK.desc(), ConfigElement.ENABLE_ICON_BLINK.languageKey());
+        durationBlinkSeconds = config.getInt(ConfigElement.DURATION_BLINK_SECONDS.key(), ctgyGen, durationBlinkSecondsDefault, -1, 60,
+                ConfigElement.DURATION_BLINK_SECONDS.desc(), ConfigElement.DURATION_BLINK_SECONDS.languageKey());
+        effectNameColor = config.getString(ConfigElement.EFFECT_NAME_COLOR.key(), ctgyGen, effectNameColorDefault,
+                ConfigElement.EFFECT_NAME_COLOR.desc(), ConfigElement.EFFECT_NAME_COLOR.validStrings(), ConfigElement.EFFECT_NAME_COLOR.languageKey());
+        durationColor = config.getString(ConfigElement.DURATION_COLOR.key(), ctgyGen, durationColorDefault,
+                ConfigElement.DURATION_COLOR.desc(), ConfigElement.DURATION_COLOR.validStrings(), ConfigElement.DURATION_COLOR.languageKey());
+        xOffset = config.getInt(ConfigElement.X_OFFSET.key(), ctgyGen, xOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
+                ConfigElement.X_OFFSET.desc(), ConfigElement.X_OFFSET.languageKey());
+        yOffset = config.getInt(ConfigElement.Y_OFFSET.key(), ctgyGen, yOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
+                ConfigElement.Y_OFFSET.desc(), ConfigElement.Y_OFFSET.languageKey());
+        yOffsetBottomCenter = config.getInt(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key(), ctgyGen, yOffsetBottomCenterDefault,
+                Integer.MIN_VALUE, Integer.MAX_VALUE, ConfigElement.Y_OFFSET_BOTTOM_CENTER.desc(), ConfigElement.Y_OFFSET_BOTTOM_CENTER.languageKey());
+        applyXOffsetToCenter = config.getBoolean(ConfigElement.APPLY_X_OFFSET_TO_CENTER.key(), ctgyGen, applyXOffsetToCenterDefault,
+                ConfigElement.APPLY_X_OFFSET_TO_CENTER.desc(), ConfigElement.APPLY_X_OFFSET_TO_CENTER.languageKey());
+        applyYOffsetToMiddle = config.getBoolean(ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.key(), ctgyGen, applyYOffsetToMiddleDefault,
+                ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.desc(), ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.languageKey());
+        showInChat = config.getBoolean(ConfigElement.SHOW_IN_CHAT.key(), ctgyGen, showInChatDefault, ConfigElement.SHOW_IN_CHAT.desc(),
+                ConfigElement.SHOW_IN_CHAT.languageKey());
         
         config.save();
+        
     }
     
     public static boolean onTickInGame(Minecraft mc)
     {
-        if (StatusEffectHUDMod.instance.isEnabled() && (mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
+        if (enabled && (mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
                 !mc.gameSettings.showDebugInfo && !mc.gameSettings.keyBindPlayerList.isPressed())
         {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

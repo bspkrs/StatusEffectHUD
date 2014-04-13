@@ -1,0 +1,16 @@
+commands.statuseffect.usage=statuseffect config
+bspkrs.seh.configgui.enabled=Enabled
+bspkrs.seh.configgui.alignMode=HUD Position
+bspkrs.seh.configgui.listMode=HUD Layout
+bspkrs.seh.configgui.enableBackground=Show Background Box
+bspkrs.seh.configgui.enableEffectName=Show Effect Name
+bspkrs.seh.configgui.enableIconBlink=Also Blink Icon when Nearly Gone
+bspkrs.seh.configgui.durationBlinkSeconds=# of Seconds to Blink Text/Icon
+bspkrs.seh.configgui.effectNameColor=Effect Name Color
+bspkrs.seh.configgui.durationColor=Timer Text Color
+bspkrs.seh.configgui.xOffset=Horizontal HUD Offset
+bspkrs.seh.configgui.yOffset=Vertical HUD Offset
+bspkrs.seh.configgui.yOffsetBottomCenter=Bottom Center Vertical HUD Offset
+bspkrs.seh.configgui.applyXOffsetToCenter=Apply Horizontal Offset to Center
+bspkrs.seh.configgui.applyYOffsetToMiddle=Apply Vertical Offset to Middle
+bspkrs.seh.configgui.showInChat=Show While Chat is Open

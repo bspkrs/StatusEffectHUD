@@ -1,6 +1,8 @@
 package bspkrs.statuseffecthud.fml;
 
+import net.minecraftforge.client.ClientCommandHandler;
 import bspkrs.bspkrscore.fml.bspkrsCoreMod;
+import bspkrs.statuseffecthud.CommandStatusEffect;
 import bspkrs.statuseffecthud.StatusEffectHUD;
 import bspkrs.util.Const;
 import bspkrs.util.ModVersionChecker;
@@ -19,8 +21,6 @@ public class StatusEffectHUDMod
     protected ModVersionChecker      versionChecker;
     private final String             versionURL = Const.VERSION_URL + "/Minecraft/" + Const.MCVERSION + "/statusEffectHUD.version";
     private final String             mcfTopic   = "http://www.minecraftforum.net/topic/1114612-";
-    
-    private boolean                  isEnabled  = true;
     
     @Metadata(value = "StatusEffectHUD")
     public static ModMetadata        metadata;
@@ -46,15 +46,10 @@ public class StatusEffectHUDMod
     {
         FMLCommonHandler.instance().bus().register(new SEHGameTicker());
         FMLCommonHandler.instance().bus().register(new SEHRenderTicker());
-    }
-    
-    public void setEnabled(boolean bol)
-    {
-        isEnabled = bol;
-    }
-    
-    public boolean isEnabled()
-    {
-        return isEnabled;
+        
+        if (event.getSide().isClient())
+        {
+            ClientCommandHandler.instance.registerCommand(new CommandStatusEffect());
+        }
     }
 }
