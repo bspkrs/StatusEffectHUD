@@ -1,3 +1,5 @@
+1.22 - (13-Apr-2014)
+- added in-game config gui stuff (command /statuseffect config)
 1.21 - (24-Jan-2014)
 - added isEnabled control
 1.20 - 19-Jan-2014
