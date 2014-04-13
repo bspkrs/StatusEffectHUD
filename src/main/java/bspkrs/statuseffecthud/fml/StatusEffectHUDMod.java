@@ -15,7 +15,8 @@ import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "StatusEffectHUD", name = "StatusEffectHUD", version = StatusEffectHUD.VERSION_NUMBER, dependencies = "required-after:bspkrsCore", useMetadata = true)
+@Mod(modid = "StatusEffectHUD", name = "StatusEffectHUD", version = StatusEffectHUD.VERSION_NUMBER, dependencies = "required-after:bspkrsCore", useMetadata = true,
+        guiFactory = "bspkrs.statuseffecthud.fml.gui.ModGuiFactoryHandler")
 public class StatusEffectHUDMod
 {
     protected ModVersionChecker      versionChecker;
