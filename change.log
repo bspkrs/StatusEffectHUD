@@ -1,73 +1,75 @@
-1.23 - (18-Apr-2014)
+1.24 - 22-Apr-2014
+- fixed flickering when playerlist is shown
+1.23 - 18-Apr-2014
 - added tooltip localizations
-1.22 - (13-Apr-2014)
+1.22 - 13-Apr-2014
 - added in-game config gui stuff (command /statuseffect config)
-1.21 - (24-Jan-2014)
+1.21 - 24-Jan-2014
 - added isEnabled control
 1.20 - 19-Jan-2014
 - updated for 1.7.2
-v1.19 (21-Oct-2013)
+1.19 - 21-Oct-2013
 - fixed min values for offsets
-v1.18 (17-Oct-2013)
+1.18 - 17-Oct-2013
 - ported existing code to Forge
-v1.17 (05-Oct-2013)
+1.17 - 05-Oct-2013
 - fixed potential concurrent modification exception
-v1.16 (29-Sep-2013)
+1.16 - 29-Sep-2013
 - added code to prevent blinking if the max duration is less than 20 seconds
-v1.15 (26-Sep-2013)
+1.15 - 26-Sep-2013
 - added blinking effect when a potion is almost gone (2 new options)
-v1.14 (17-Jul-2013)
+1.14 - 17-Jul-2013
 - fixed background covering up the text
-- 1.6.4 update (20-Sep-2013)
-v1.13 (10-Jul-2013)
+- 1.6.4 update 20-Sep-2013
+1.13 - 10-Jul-2013
 - hopefully fixed ModLoader issues
-v1.12 (09-Jul-2013)
+1.12 - 09-Jul-2013
 - update update
-- 1.6.2 update (10-Jul-2013)
-v1.11 (05-Jul-2013)
+- 1.6.2 update 10-Jul-2013
+1.11 - 05-Jul-2013
 - updated to 1.6.1
-v1.10 (24-Apr-2013)
+1.10 - 24-Apr-2013
 - addressed potential issue from mods that don't clean up their texture bindings
 - new config handler
-- updated to 1.5.2 (03-May-2013)
-v1.9 (20-Feb-2013)
+- updated to 1.5.2 03-May-2013
+1.9 - 20-Feb-2013
 - updated to support bspkrsCore
-- updated to 1.5 (15-Mar-2013)
-- updated to 1.5.1 (23-Mar-2013)
-v1.8 (24-Jan-2013)
+- updated to 1.5 15-Mar-2013
+- updated to 1.5.1 23-Mar-2013
+1.8 - 24-Jan-2013
 - added reset code to end of all drawn text
-v1.7 (01-Nov-2012)
+1.7 - 01-Nov-2012
 - fixed Forge/FML compatibility
-- updated for 1.4.5 (21-Nov-2012)
-- updated to 1.4.6 (23-Dec-2012)
-v1.6 (26-Oct-2012)
+- updated for 1.4.5 21-Nov-2012
+- updated to 1.4.6 23-Dec-2012
+1.6 - 26-Oct-2012
 - initial update to 1.4.2
-v1.52(1.2.5) (06-Oct-2012)
+1.52(1.2.5) - 06-Oct-2012
 - retrofitted v1.52 to 1.2.5
-v1.52 (04-Oct-2012)
+1.52 - 04-Oct-2012
 - compatibility update
-v1.51 (17-Sep-2012)
+1.51 - 17-Sep-2012
 - compatibility update
-v1.5 (13-Sep-2012)
+1.5 - 13-Sep-2012
 - added x and y offset options
 - switched to shared version checking
 - made icons appear on the right when right-aligned
 - background is now disabled by default
 - text colors are now configurable
-v1.4 (27-Aug-2012)
+1.4 - 27-Aug-2012
 - added config option to allow/disallow version checking
 - now includes mcmod.info file
-v1.3 (19-Aug-2012)
+1.3 - 19-Aug-2012
 - updated for 1.3.2.
-v1.2 (05-Aug-2012)
+1.2 - 05-Aug-2012
 - updated for 1.3.1.
 - added version checking.
-v1.12 (29-Mar-2012)
+1.12 - 29-Mar-2012
 - YO DAWG, I heard you like stupid mistake fixes, so I put a stupid mistake fix out for my stupid mistake fix so the stupid mistake fix will be fixed.
-v1.11 (27-Mar-2012)
+1.11 - 27-Mar-2012
 - fixed stupid mistake when updating from 1.2.3 to 1.2.4 that caused the text to render without the shadow
-v1.1 (24-Mar-2012)
+1.1 - 24-Mar-2012
 - option to show/hide effect names
 - option to show/hide background box
-v1.0 (23-Mar-2012)
+1.0 - 23-Mar-2012
 - Initial release
