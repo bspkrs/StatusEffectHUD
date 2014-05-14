@@ -31,17 +31,13 @@ public class SEHGameTicker
         
         boolean keepTicking = !(mc != null && mc.thePlayer != null && mc.theWorld != null);
         
-        if (bspkrsCoreMod.instance.allowUpdateCheck && !keepTicking)
+        if (!keepTicking && isRegistered)
         {
             if (bspkrsCoreMod.instance.allowUpdateCheck && StatusEffectHUDMod.instance.versionChecker != null)
                 if (!StatusEffectHUDMod.instance.versionChecker.isCurrentVersion())
                     for (String msg : StatusEffectHUDMod.instance.versionChecker.getInGameMessage())
                         EntityPlayerHelper.addChatMessage(mc.thePlayer, new ChatComponentText(msg));
             
-        }
-        
-        if (!keepTicking)
-        {
             FMLCommonHandler.instance().bus().unregister(this);
             isRegistered = false;
         }

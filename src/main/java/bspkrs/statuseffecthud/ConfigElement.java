@@ -14,6 +14,8 @@ public enum ConfigElement
             STRING, new String[] { "topleft", "topcenter", "topright", "middleleft", "middlecenter", "middleright", "bottomleft", "bottomcenter", "bottomright" }),
     //    LIST_MODE("listMode", "bspkrs.seh.configgui.listMode",
     //            "Sets the direction to display status items. Valid list mode strings are horizontal and vertical.", STRING, new String[] { "vertical", "horizontal" }),
+    DISABLE_INV_EFFECT_LIST("disableInventoryEffectList", "bspkrs.seh.configgui.disableInventoryEffectList",
+            "Set to true to disable the vanilla status effect list shown when your inventory is open, false to allow vanilla inventory behavior.", BOOLEAN),
     ENABLE_BACKGROUND("enableBackground", "bspkrs.seh.configgui.enableBackground",
             "Set to true to see the effect background box, false to disable.", BOOLEAN),
     ENABLE_EFFECT_NAME("enableEffectName", "bspkrs.seh.configgui.enableEffectName",

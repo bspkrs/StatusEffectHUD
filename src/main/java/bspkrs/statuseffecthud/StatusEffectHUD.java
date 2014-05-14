@@ -19,58 +19,52 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
+import bspkrs.statuseffecthud.fml.Reference;
 import bspkrs.util.CommonUtils;
-import bspkrs.util.Const;
 import bspkrs.util.config.Configuration;
 
 public class StatusEffectHUD
 {
-    public static final String                VERSION_NUMBER              = "1.24(" + Const.MCVERSION + ")";
-    
-    protected static float                    zLevel                      = -150.0F;
+    protected static float                    zLevel                            = -150.0F;
     private static ScaledResolution           scaledResolution;
     
     // Config fields
-    private final static boolean              enabledDefault              = true;
-    public static boolean                     enabled                     = enabledDefault;
-    private final static String               alignModeDefault            = "middleright";
-    public static String                      alignMode                   = alignModeDefault;
+    private final static boolean              enabledDefault                    = true;
+    public static boolean                     enabled                           = enabledDefault;
+    private final static String               alignModeDefault                  = "middleright";
+    public static String                      alignMode                         = alignModeDefault;
     // @BSProp(info="Valid list mode strings are horizontal and vertical")
     // public static String listMode = "vertical";
-    private final static boolean              enableBackgroundDefault     = false;
-    public static boolean                     enableBackground            = enableBackgroundDefault;
-    private final static boolean              enableEffectNameDefault     = true;
-    public static boolean                     enableEffectName            = enableEffectNameDefault;
-    private final static boolean              enableIconBlinkDefault      = true;
-    public static boolean                     enableIconBlink             = enableIconBlinkDefault;
-    private final static int                  durationBlinkSecondsDefault = 10;
-    public static int                         durationBlinkSeconds        = durationBlinkSecondsDefault;
-    private final static String               effectNameColorDefault      = "f";
-    public static String                      effectNameColor             = effectNameColorDefault;
-    private final static String               durationColorDefault        = "f";
-    public static String                      durationColor               = durationColorDefault;
-    private final static int                  xOffsetDefault              = 2;
-    public static int                         xOffset                     = xOffsetDefault;
-    private final static int                  yOffsetDefault              = 2;
-    public static int                         yOffset                     = yOffsetDefault;
-    private final static int                  yOffsetBottomCenterDefault  = 41;
-    public static int                         yOffsetBottomCenter         = yOffsetBottomCenterDefault;
-    private final static boolean              applyXOffsetToCenterDefault = false;
-    public static boolean                     applyXOffsetToCenter        = applyXOffsetToCenterDefault;
-    private final static boolean              applyYOffsetToMiddleDefault = false;
-    public static boolean                     applyYOffsetToMiddle        = applyYOffsetToMiddleDefault;
-    private final static boolean              showInChatDefault           = true;
-    public static boolean                     showInChat                  = showInChatDefault;
+    private final static boolean              disableInventoryEffectListDefault = true;
+    public static boolean                     disableInventoryEffectList        = disableInventoryEffectListDefault;
+    private final static boolean              enableBackgroundDefault           = false;
+    public static boolean                     enableBackground                  = enableBackgroundDefault;
+    private final static boolean              enableEffectNameDefault           = true;
+    public static boolean                     enableEffectName                  = enableEffectNameDefault;
+    private final static boolean              enableIconBlinkDefault            = true;
+    public static boolean                     enableIconBlink                   = enableIconBlinkDefault;
+    private final static int                  durationBlinkSecondsDefault       = 10;
+    public static int                         durationBlinkSeconds              = durationBlinkSecondsDefault;
+    private final static String               effectNameColorDefault            = "f";
+    public static String                      effectNameColor                   = effectNameColorDefault;
+    private final static String               durationColorDefault              = "f";
+    public static String                      durationColor                     = durationColorDefault;
+    private final static int                  xOffsetDefault                    = 2;
+    public static int                         xOffset                           = xOffsetDefault;
+    private final static int                  yOffsetDefault                    = 2;
+    public static int                         yOffset                           = yOffsetDefault;
+    private final static int                  yOffsetBottomCenterDefault        = 41;
+    public static int                         yOffsetBottomCenter               = yOffsetBottomCenterDefault;
+    private final static boolean              applyXOffsetToCenterDefault       = false;
+    public static boolean                     applyXOffsetToCenter              = applyXOffsetToCenterDefault;
+    private final static boolean              applyYOffsetToMiddleDefault       = false;
+    public static boolean                     applyYOffsetToMiddle              = applyYOffsetToMiddleDefault;
+    private final static boolean              showInChatDefault                 = true;
+    public static boolean                     showInChat                        = showInChatDefault;
     
-    private static Map<PotionEffect, Integer> potionMaxDurationMap        = new HashMap<PotionEffect, Integer>();
-    private static Configuration              config;
+    private static Map<PotionEffect, Integer> potionMaxDurationMap              = new HashMap<PotionEffect, Integer>();
     
-    public static Configuration getConfig()
-    {
-        return config;
-    }
-    
-    public static void loadConfig(File file)
+    public static void initConfig(File file)
     {
         if (!CommonUtils.isObfuscatedEnv())
         { // debug settings for deobfuscated execution
@@ -78,7 +72,7 @@ public class StatusEffectHUD
           //                file.delete();
         }
         
-        config = new Configuration(file);
+        Reference.config = new Configuration(file);
         
         syncConfig();
     }
@@ -87,41 +81,44 @@ public class StatusEffectHUD
     {
         String ctgyGen = Configuration.CATEGORY_GENERAL;
         
-        config.load();
+        Reference.config.load();
         
-        config.addCustomCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
+        Reference.config.addCustomCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
                 "Type the command '/statuseffect config' without the quotes in-game to modify these settings.");
+        Reference.config.setCategoryIsHotLoadable(ctgyGen, true);
         
-        enabled = config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault, ConfigElement.ENABLED.desc(),
+        enabled = Reference.config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault, ConfigElement.ENABLED.desc(),
                 ConfigElement.ENABLED.languageKey());
-        alignMode = config.getString(ConfigElement.ALIGN_MODE.key(), ctgyGen, alignModeDefault, ConfigElement.ALIGN_MODE.desc(),
+        alignMode = Reference.config.getString(ConfigElement.ALIGN_MODE.key(), ctgyGen, alignModeDefault, ConfigElement.ALIGN_MODE.desc(),
                 ConfigElement.ALIGN_MODE.validStrings(), ConfigElement.ALIGN_MODE.languageKey());
-        enableBackground = config.getBoolean(ConfigElement.ENABLE_BACKGROUND.key(), ctgyGen, enableBackgroundDefault, ConfigElement.ENABLE_BACKGROUND.desc(),
+        disableInventoryEffectList = Reference.config.getBoolean(ConfigElement.DISABLE_INV_EFFECT_LIST.key(), ctgyGen, disableInventoryEffectListDefault,
+                ConfigElement.DISABLE_INV_EFFECT_LIST.desc(), ConfigElement.DISABLE_INV_EFFECT_LIST.languageKey());
+        enableBackground = Reference.config.getBoolean(ConfigElement.ENABLE_BACKGROUND.key(), ctgyGen, enableBackgroundDefault, ConfigElement.ENABLE_BACKGROUND.desc(),
                 ConfigElement.ENABLE_BACKGROUND.languageKey());
-        enableEffectName = config.getBoolean(ConfigElement.ENABLE_EFFECT_NAME.key(), ctgyGen, enableEffectNameDefault, ConfigElement.ENABLE_EFFECT_NAME.desc(),
+        enableEffectName = Reference.config.getBoolean(ConfigElement.ENABLE_EFFECT_NAME.key(), ctgyGen, enableEffectNameDefault, ConfigElement.ENABLE_EFFECT_NAME.desc(),
                 ConfigElement.ENABLE_EFFECT_NAME.languageKey());
-        enableIconBlink = config.getBoolean(ConfigElement.ENABLE_ICON_BLINK.key(), ctgyGen, enableIconBlinkDefault,
+        enableIconBlink = Reference.config.getBoolean(ConfigElement.ENABLE_ICON_BLINK.key(), ctgyGen, enableIconBlinkDefault,
                 ConfigElement.ENABLE_ICON_BLINK.desc(), ConfigElement.ENABLE_ICON_BLINK.languageKey());
-        durationBlinkSeconds = config.getInt(ConfigElement.DURATION_BLINK_SECONDS.key(), ctgyGen, durationBlinkSecondsDefault, -1, 60,
+        durationBlinkSeconds = Reference.config.getInt(ConfigElement.DURATION_BLINK_SECONDS.key(), ctgyGen, durationBlinkSecondsDefault, -1, 60,
                 ConfigElement.DURATION_BLINK_SECONDS.desc(), ConfigElement.DURATION_BLINK_SECONDS.languageKey());
-        effectNameColor = config.getString(ConfigElement.EFFECT_NAME_COLOR.key(), ctgyGen, effectNameColorDefault,
+        effectNameColor = Reference.config.getString(ConfigElement.EFFECT_NAME_COLOR.key(), ctgyGen, effectNameColorDefault,
                 ConfigElement.EFFECT_NAME_COLOR.desc(), ConfigElement.EFFECT_NAME_COLOR.validStrings(), ConfigElement.EFFECT_NAME_COLOR.languageKey());
-        durationColor = config.getString(ConfigElement.DURATION_COLOR.key(), ctgyGen, durationColorDefault,
+        durationColor = Reference.config.getString(ConfigElement.DURATION_COLOR.key(), ctgyGen, durationColorDefault,
                 ConfigElement.DURATION_COLOR.desc(), ConfigElement.DURATION_COLOR.validStrings(), ConfigElement.DURATION_COLOR.languageKey());
-        xOffset = config.getInt(ConfigElement.X_OFFSET.key(), ctgyGen, xOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
+        xOffset = Reference.config.getInt(ConfigElement.X_OFFSET.key(), ctgyGen, xOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
                 ConfigElement.X_OFFSET.desc(), ConfigElement.X_OFFSET.languageKey());
-        yOffset = config.getInt(ConfigElement.Y_OFFSET.key(), ctgyGen, yOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
+        yOffset = Reference.config.getInt(ConfigElement.Y_OFFSET.key(), ctgyGen, yOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
                 ConfigElement.Y_OFFSET.desc(), ConfigElement.Y_OFFSET.languageKey());
-        yOffsetBottomCenter = config.getInt(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key(), ctgyGen, yOffsetBottomCenterDefault,
+        yOffsetBottomCenter = Reference.config.getInt(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key(), ctgyGen, yOffsetBottomCenterDefault,
                 Integer.MIN_VALUE, Integer.MAX_VALUE, ConfigElement.Y_OFFSET_BOTTOM_CENTER.desc(), ConfigElement.Y_OFFSET_BOTTOM_CENTER.languageKey());
-        applyXOffsetToCenter = config.getBoolean(ConfigElement.APPLY_X_OFFSET_TO_CENTER.key(), ctgyGen, applyXOffsetToCenterDefault,
+        applyXOffsetToCenter = Reference.config.getBoolean(ConfigElement.APPLY_X_OFFSET_TO_CENTER.key(), ctgyGen, applyXOffsetToCenterDefault,
                 ConfigElement.APPLY_X_OFFSET_TO_CENTER.desc(), ConfigElement.APPLY_X_OFFSET_TO_CENTER.languageKey());
-        applyYOffsetToMiddle = config.getBoolean(ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.key(), ctgyGen, applyYOffsetToMiddleDefault,
+        applyYOffsetToMiddle = Reference.config.getBoolean(ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.key(), ctgyGen, applyYOffsetToMiddleDefault,
                 ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.desc(), ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.languageKey());
-        showInChat = config.getBoolean(ConfigElement.SHOW_IN_CHAT.key(), ctgyGen, showInChatDefault, ConfigElement.SHOW_IN_CHAT.desc(),
+        showInChat = Reference.config.getBoolean(ConfigElement.SHOW_IN_CHAT.key(), ctgyGen, showInChatDefault, ConfigElement.SHOW_IN_CHAT.desc(),
                 ConfigElement.SHOW_IN_CHAT.languageKey());
         
-        config.save();
+        Reference.config.save();
         
     }
     
