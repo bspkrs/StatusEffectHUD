@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -87,36 +88,55 @@ public class StatusEffectHUD
                 "Type the command '/statuseffect config' without the quotes in-game to modify these settings.");
         Reference.config.setCategoryIsHotLoadable(ctgyGen, true);
         
-        enabled = Reference.config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault, ConfigElement.ENABLED.desc(),
-                ConfigElement.ENABLED.languageKey());
-        alignMode = Reference.config.getString(ConfigElement.ALIGN_MODE.key(), ctgyGen, alignModeDefault, ConfigElement.ALIGN_MODE.desc(),
-                ConfigElement.ALIGN_MODE.validStrings(), ConfigElement.ALIGN_MODE.languageKey());
+        LinkedHashSet<String> orderedKeys = new LinkedHashSet<String>(ConfigElement.values().length);
+        
+        enabled = Reference.config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault,
+                ConfigElement.ENABLED.desc(), ConfigElement.ENABLED.languageKey());
+        orderedKeys.add(ConfigElement.ENABLED.key());
+        alignMode = Reference.config.getString(ConfigElement.ALIGN_MODE.key(), ctgyGen, alignModeDefault,
+                ConfigElement.ALIGN_MODE.desc(), ConfigElement.ALIGN_MODE.validStrings(), ConfigElement.ALIGN_MODE.languageKey());
+        orderedKeys.add(ConfigElement.ALIGN_MODE.key());
         disableInventoryEffectList = Reference.config.getBoolean(ConfigElement.DISABLE_INV_EFFECT_LIST.key(), ctgyGen, disableInventoryEffectListDefault,
                 ConfigElement.DISABLE_INV_EFFECT_LIST.desc(), ConfigElement.DISABLE_INV_EFFECT_LIST.languageKey());
-        enableBackground = Reference.config.getBoolean(ConfigElement.ENABLE_BACKGROUND.key(), ctgyGen, enableBackgroundDefault, ConfigElement.ENABLE_BACKGROUND.desc(),
-                ConfigElement.ENABLE_BACKGROUND.languageKey());
-        enableEffectName = Reference.config.getBoolean(ConfigElement.ENABLE_EFFECT_NAME.key(), ctgyGen, enableEffectNameDefault, ConfigElement.ENABLE_EFFECT_NAME.desc(),
-                ConfigElement.ENABLE_EFFECT_NAME.languageKey());
-        enableIconBlink = Reference.config.getBoolean(ConfigElement.ENABLE_ICON_BLINK.key(), ctgyGen, enableIconBlinkDefault,
-                ConfigElement.ENABLE_ICON_BLINK.desc(), ConfigElement.ENABLE_ICON_BLINK.languageKey());
-        durationBlinkSeconds = Reference.config.getInt(ConfigElement.DURATION_BLINK_SECONDS.key(), ctgyGen, durationBlinkSecondsDefault, -1, 60,
-                ConfigElement.DURATION_BLINK_SECONDS.desc(), ConfigElement.DURATION_BLINK_SECONDS.languageKey());
+        orderedKeys.add(ConfigElement.DISABLE_INV_EFFECT_LIST.key());
+        showInChat = Reference.config.getBoolean(ConfigElement.SHOW_IN_CHAT.key(), ctgyGen, showInChatDefault,
+                ConfigElement.SHOW_IN_CHAT.desc(), ConfigElement.SHOW_IN_CHAT.languageKey());
+        orderedKeys.add(ConfigElement.SHOW_IN_CHAT.key());
+        enableBackground = Reference.config.getBoolean(ConfigElement.ENABLE_BACKGROUND.key(), ctgyGen, enableBackgroundDefault,
+                ConfigElement.ENABLE_BACKGROUND.desc(), ConfigElement.ENABLE_BACKGROUND.languageKey());
+        orderedKeys.add(ConfigElement.ENABLE_BACKGROUND.key());
+        enableEffectName = Reference.config.getBoolean(ConfigElement.ENABLE_EFFECT_NAME.key(), ctgyGen, enableEffectNameDefault,
+                ConfigElement.ENABLE_EFFECT_NAME.desc(), ConfigElement.ENABLE_EFFECT_NAME.languageKey());
+        orderedKeys.add(ConfigElement.ENABLE_EFFECT_NAME.key());
         effectNameColor = Reference.config.getString(ConfigElement.EFFECT_NAME_COLOR.key(), ctgyGen, effectNameColorDefault,
                 ConfigElement.EFFECT_NAME_COLOR.desc(), ConfigElement.EFFECT_NAME_COLOR.validStrings(), ConfigElement.EFFECT_NAME_COLOR.languageKey());
+        orderedKeys.add(ConfigElement.EFFECT_NAME_COLOR.key());
         durationColor = Reference.config.getString(ConfigElement.DURATION_COLOR.key(), ctgyGen, durationColorDefault,
                 ConfigElement.DURATION_COLOR.desc(), ConfigElement.DURATION_COLOR.validStrings(), ConfigElement.DURATION_COLOR.languageKey());
+        orderedKeys.add(ConfigElement.DURATION_COLOR.key());
+        enableIconBlink = Reference.config.getBoolean(ConfigElement.ENABLE_ICON_BLINK.key(), ctgyGen, enableIconBlinkDefault,
+                ConfigElement.ENABLE_ICON_BLINK.desc(), ConfigElement.ENABLE_ICON_BLINK.languageKey());
+        orderedKeys.add(ConfigElement.ENABLE_ICON_BLINK.key());
+        durationBlinkSeconds = Reference.config.getInt(ConfigElement.DURATION_BLINK_SECONDS.key(), ctgyGen, durationBlinkSecondsDefault, -1, 60,
+                ConfigElement.DURATION_BLINK_SECONDS.desc(), ConfigElement.DURATION_BLINK_SECONDS.languageKey());
+        orderedKeys.add(ConfigElement.DURATION_BLINK_SECONDS.key());
         xOffset = Reference.config.getInt(ConfigElement.X_OFFSET.key(), ctgyGen, xOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
                 ConfigElement.X_OFFSET.desc(), ConfigElement.X_OFFSET.languageKey());
-        yOffset = Reference.config.getInt(ConfigElement.Y_OFFSET.key(), ctgyGen, yOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
-                ConfigElement.Y_OFFSET.desc(), ConfigElement.Y_OFFSET.languageKey());
-        yOffsetBottomCenter = Reference.config.getInt(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key(), ctgyGen, yOffsetBottomCenterDefault,
-                Integer.MIN_VALUE, Integer.MAX_VALUE, ConfigElement.Y_OFFSET_BOTTOM_CENTER.desc(), ConfigElement.Y_OFFSET_BOTTOM_CENTER.languageKey());
+        orderedKeys.add(ConfigElement.X_OFFSET.key());
         applyXOffsetToCenter = Reference.config.getBoolean(ConfigElement.APPLY_X_OFFSET_TO_CENTER.key(), ctgyGen, applyXOffsetToCenterDefault,
                 ConfigElement.APPLY_X_OFFSET_TO_CENTER.desc(), ConfigElement.APPLY_X_OFFSET_TO_CENTER.languageKey());
+        orderedKeys.add(ConfigElement.APPLY_X_OFFSET_TO_CENTER.key());
+        yOffset = Reference.config.getInt(ConfigElement.Y_OFFSET.key(), ctgyGen, yOffsetDefault, Integer.MIN_VALUE, Integer.MAX_VALUE,
+                ConfigElement.Y_OFFSET.desc(), ConfigElement.Y_OFFSET.languageKey());
+        orderedKeys.add(ConfigElement.Y_OFFSET.key());
         applyYOffsetToMiddle = Reference.config.getBoolean(ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.key(), ctgyGen, applyYOffsetToMiddleDefault,
                 ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.desc(), ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.languageKey());
-        showInChat = Reference.config.getBoolean(ConfigElement.SHOW_IN_CHAT.key(), ctgyGen, showInChatDefault, ConfigElement.SHOW_IN_CHAT.desc(),
-                ConfigElement.SHOW_IN_CHAT.languageKey());
+        orderedKeys.add(ConfigElement.APPLY_Y_OFFSET_TO_MIDDLE.key());
+        yOffsetBottomCenter = Reference.config.getInt(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key(), ctgyGen, yOffsetBottomCenterDefault,
+                Integer.MIN_VALUE, Integer.MAX_VALUE, ConfigElement.Y_OFFSET_BOTTOM_CENTER.desc(), ConfigElement.Y_OFFSET_BOTTOM_CENTER.languageKey());
+        orderedKeys.add(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key());
+        
+        Reference.config.setCategoryPropertyOrder(ctgyGen, orderedKeys);
         
         Reference.config.save();
         
