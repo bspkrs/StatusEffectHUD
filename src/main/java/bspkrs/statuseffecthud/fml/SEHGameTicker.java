@@ -3,7 +3,6 @@ package bspkrs.statuseffecthud.fml;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import bspkrs.bspkrscore.fml.bspkrsCoreMod;
-import bspkrs.helpers.entity.player.EntityPlayerHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -36,7 +35,7 @@ public class SEHGameTicker
             if (bspkrsCoreMod.instance.allowUpdateCheck && StatusEffectHUDMod.instance.versionChecker != null)
                 if (!StatusEffectHUDMod.instance.versionChecker.isCurrentVersion())
                     for (String msg : StatusEffectHUDMod.instance.versionChecker.getInGameMessage())
-                        EntityPlayerHelper.addChatMessage(mc.thePlayer, new ChatComponentText(msg));
+                        mc.thePlayer.addChatMessage(new ChatComponentText(msg));
             
             FMLCommonHandler.instance().bus().unregister(this);
             isRegistered = false;
