@@ -1,4 +1,4 @@
-1.25 - ???
+1.25 - 23-May-2014
 - added new option to disable the vanilla status effect view on the inventory screen
 - added support for ConfigChangedEvent
 - added proper dependency versioning
