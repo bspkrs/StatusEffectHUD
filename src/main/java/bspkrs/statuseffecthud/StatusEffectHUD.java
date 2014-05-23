@@ -1,10 +1,10 @@
 package bspkrs.statuseffecthud;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -84,11 +84,11 @@ public class StatusEffectHUD
         
         Reference.config.load();
         
-        Reference.config.addCustomCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
+        Reference.config.setCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
                 "Type the command '/statuseffect config' without the quotes in-game to modify these settings.");
         Reference.config.setCategoryIsHotLoadable(ctgyGen, true);
         
-        LinkedHashSet<String> orderedKeys = new LinkedHashSet<String>(ConfigElement.values().length);
+        List<String> orderedKeys = new ArrayList<String>(ConfigElement.values().length);
         
         enabled = Reference.config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault,
                 ConfigElement.ENABLED.desc(), ConfigElement.ENABLED.languageKey());
