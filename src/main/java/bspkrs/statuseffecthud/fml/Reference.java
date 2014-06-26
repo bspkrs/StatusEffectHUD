@@ -1,6 +1,6 @@
 package bspkrs.statuseffecthud.fml;
 
-import bspkrs.util.config.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 public class Reference
 {

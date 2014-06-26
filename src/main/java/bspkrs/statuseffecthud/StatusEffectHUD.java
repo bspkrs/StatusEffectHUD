@@ -16,13 +16,13 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.config.Configuration;
 
 import org.lwjgl.opengl.GL11;
 
 import bspkrs.client.util.HUDUtils;
 import bspkrs.statuseffecthud.fml.Reference;
 import bspkrs.util.CommonUtils;
-import bspkrs.util.config.Configuration;
 
 public class StatusEffectHUD
 {
@@ -86,7 +86,6 @@ public class StatusEffectHUD
         
         Reference.config.setCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
                 "Type the command '/statuseffect config' without the quotes in-game to modify these settings.");
-        Reference.config.setCategoryIsHotLoadable(ctgyGen, true);
         
         List<String> orderedKeys = new ArrayList<String>(ConfigElement.values().length);
         
