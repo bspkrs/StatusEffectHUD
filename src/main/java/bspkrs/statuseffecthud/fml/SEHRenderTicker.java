@@ -28,6 +28,7 @@ public class SEHRenderTicker
         isRegistered = true;
     }
     
+    @SuppressWarnings("rawtypes")
     @SubscribeEvent
     public void onTick(RenderTickEvent event)
     {
