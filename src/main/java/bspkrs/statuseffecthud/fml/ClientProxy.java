@@ -18,17 +18,17 @@ public class ClientProxy extends CommonProxy
     {
         StatusEffectHUD.initConfig(event.getSuggestedConfigurationFile());
     }
-    
+
     @Override
     public void init(FMLInitializationEvent event)
     {
         FMLCommonHandler.instance().bus().register(new SEHGameTicker());
         FMLCommonHandler.instance().bus().register(new SEHRenderTicker());
-        
+
         ClientCommandHandler.instance.registerCommand(new CommandStatusEffect());
-        
+
         FMLCommonHandler.instance().bus().register(this);
-        
+
         if (bspkrsCoreMod.instance.allowUpdateCheck)
         {
             StatusEffectHUDMod.instance.versionChecker = new ModVersionChecker(Reference.MODID,
@@ -36,7 +36,7 @@ public class ClientProxy extends CommonProxy
             StatusEffectHUDMod.instance.versionChecker.checkVersionWithLogging();
         }
     }
-    
+
     @SubscribeEvent
     public void onConfigChanged(OnConfigChangedEvent event)
     {

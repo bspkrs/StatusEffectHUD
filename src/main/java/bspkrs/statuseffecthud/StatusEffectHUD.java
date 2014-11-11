@@ -28,7 +28,7 @@ public class StatusEffectHUD
 {
     protected static float                    zLevel                            = -150.0F;
     private static ScaledResolution           scaledResolution;
-    
+
     // Config fields
     private final static boolean              enabledDefault                    = true;
     public static boolean                     enabled                           = enabledDefault;
@@ -62,9 +62,9 @@ public class StatusEffectHUD
     public static boolean                     applyYOffsetToMiddle              = applyYOffsetToMiddleDefault;
     private final static boolean              showInChatDefault                 = true;
     public static boolean                     showInChat                        = showInChatDefault;
-    
+
     private static Map<PotionEffect, Integer> potionMaxDurationMap              = new HashMap<PotionEffect, Integer>();
-    
+
     public static void initConfig(File file)
     {
         if (!CommonUtils.isObfuscatedEnv())
@@ -72,23 +72,23 @@ public class StatusEffectHUD
           //            if (file.exists())
           //                file.delete();
         }
-        
+
         Reference.config = new Configuration(file);
-        
+
         syncConfig();
     }
-    
+
     public static void syncConfig()
     {
         String ctgyGen = Configuration.CATEGORY_GENERAL;
-        
+
         Reference.config.load();
-        
+
         Reference.config.setCategoryComment(ctgyGen, "ATTENTION: Editing this file manually is no longer necessary. \n" +
                 "Type the command '/statuseffect config' without the quotes in-game to modify these settings.");
-        
+
         List<String> orderedKeys = new ArrayList<String>(ConfigElement.values().length);
-        
+
         enabled = Reference.config.getBoolean(ConfigElement.ENABLED.key(), ctgyGen, enabledDefault,
                 ConfigElement.ENABLED.desc(), ConfigElement.ENABLED.languageKey());
         orderedKeys.add(ConfigElement.ENABLED.key());
@@ -134,13 +134,13 @@ public class StatusEffectHUD
         yOffsetBottomCenter = Reference.config.getInt(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key(), ctgyGen, yOffsetBottomCenterDefault,
                 Integer.MIN_VALUE, Integer.MAX_VALUE, ConfigElement.Y_OFFSET_BOTTOM_CENTER.desc(), ConfigElement.Y_OFFSET_BOTTOM_CENTER.languageKey());
         orderedKeys.add(ConfigElement.Y_OFFSET_BOTTOM_CENTER.key());
-        
+
         Reference.config.setCategoryPropertyOrder(ctgyGen, orderedKeys);
-        
+
         Reference.config.save();
-        
+
     }
-    
+
     public static boolean onTickInGame(Minecraft mc)
     {
         if (enabled && (mc.inGameHasFocus || mc.currentScreen == null || (mc.currentScreen instanceof GuiChat && showInChat)) &&
@@ -151,10 +151,10 @@ public class StatusEffectHUD
             displayStatusEffects(mc);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
-        
+
         return true;
     }
-    
+
     private static int getX(int width)
     {
         if (alignMode.equalsIgnoreCase("topcenter") || alignMode.equalsIgnoreCase("middlecenter") || alignMode.equalsIgnoreCase("bottomcenter"))
@@ -164,7 +164,7 @@ public class StatusEffectHUD
         else
             return xOffset;
     }
-    
+
     private static int getY(int rowCount, int height)
     {
         if (alignMode.equalsIgnoreCase("middleleft") || alignMode.equalsIgnoreCase("middlecenter") || alignMode.equalsIgnoreCase("middleright"))
@@ -176,46 +176,46 @@ public class StatusEffectHUD
         else
             return yOffset;
     }
-    
+
     private static boolean shouldRender(PotionEffect pe, int ticksLeft, int thresholdSeconds)
     {
         if (potionMaxDurationMap.get(pe).intValue() > 400)
             if (ticksLeft / 20 <= thresholdSeconds)
                 return ticksLeft % 20 < 10;
-        
+
         return true;
     }
-    
+
     private static void displayStatusEffects(Minecraft mc)
     {
         Collection<?> activeEffects = mc.thePlayer.getActivePotionEffects();
-        
+
         if (!activeEffects.isEmpty())
         {
             int yOffset = enableBackground ? 33 : enableEffectName ? 20 : 18;
             if (activeEffects.size() > 5 && enableBackground)
                 yOffset = 132 / (activeEffects.size() - 1);
-            
+
             int yBase = getY(activeEffects.size(), yOffset);
-            
+
             for (Iterator<?> iteratorPotionEffect = activeEffects.iterator(); iteratorPotionEffect.hasNext(); yBase += yOffset)
             {
                 PotionEffect potionEffect = (PotionEffect) iteratorPotionEffect.next();
-                
+
                 // If we find a newly added potionEffect, add it and the current duration to the map to keep track of the max duration
                 if (!potionMaxDurationMap.containsKey(potionEffect) || potionMaxDurationMap.get(potionEffect).intValue() < potionEffect.getDuration())
                     potionMaxDurationMap.put(potionEffect, new Integer(potionEffect.getDuration()));
-                
+
                 Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/inventory.png"));
-                int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth("0:00"));
+                int xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRendererObj.getStringWidth("0:00"));
                 String potionName = "";
-                
+
                 if (enableEffectName)
                 {
                     potionName = StatCollector.translateToLocal(potion.getName());
-                    
+
                     if (potionEffect.getAmplifier() == 1)
                     {
                         potionName = potionName + " II";
@@ -228,31 +228,31 @@ public class StatusEffectHUD
                     {
                         potionName = potionName + " IV";
                     }
-                    
-                    xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRenderer.getStringWidth(potionName));
+
+                    xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRendererObj.getStringWidth(potionName));
                 }
-                
+
                 String effectDuration = Potion.getDurationString(potionEffect);
-                
+
                 if (enableBackground)
                     HUDUtils.drawTexturedModalRect(xBase, yBase, 0, 166, 140, 32, zLevel);
-                
+
                 if (alignMode.toLowerCase().contains("right"))
                 {
                     xBase = getX(0);
                     if (potion.hasStatusIcon())
                     {
                         int potionStatusIcon = potion.getStatusIconIndex();
-                        
+
                         if (!enableIconBlink || (enableIconBlink && shouldRender(potionEffect, potionEffect.getDuration(), durationBlinkSeconds)))
                             HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? -24 : -18), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
-                    int stringWidth = mc.fontRenderer.getStringWidth(potionName);
-                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0), 0xffffff);
-                    stringWidth = mc.fontRenderer.getStringWidth(effectDuration);
-                    
+                    int stringWidth = mc.fontRendererObj.getStringWidth(potionName);
+                    mc.fontRendererObj.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0), 0xffffff);
+                    stringWidth = mc.fontRendererObj.getStringWidth(effectDuration);
+
                     if (shouldRender(potionEffect, potionEffect.getDuration(), durationBlinkSeconds))
-                        mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
+                        mc.fontRendererObj.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? -10 : -4) - 18 - stringWidth, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
                 }
                 else
                 {
@@ -261,20 +261,20 @@ public class StatusEffectHUD
                         int potionStatusIcon = potion.getStatusIconIndex();
                         HUDUtils.drawTexturedModalRect(xBase + (enableBackground ? 6 : 0), yBase + (enableBackground ? 7 : 0), 0 + potionStatusIcon % 8 * 18, 166 + 32 + potionStatusIcon / 8 * 18, 18, 18, zLevel);
                     }
-                    mc.fontRenderer.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0), 0xffffff);
-                    
+                    mc.fontRendererObj.drawStringWithShadow("\247" + effectNameColor + potionName + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0), 0xffffff);
+
                     if (shouldRender(potionEffect, potionEffect.getDuration(), durationBlinkSeconds))
-                        mc.fontRenderer.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
+                        mc.fontRendererObj.drawStringWithShadow("\247" + durationColor + effectDuration + "\247r", xBase + (enableBackground ? 10 : 4) + 18, yBase + (enableBackground ? 6 : 0) + (enableEffectName ? 10 : 5), 0xffffff);
                 }
             }
-            
+
             // See if any potions have expired... if they have, remove them from the map
             List<PotionEffect> toRemove = new LinkedList<PotionEffect>();
-            
+
             for (PotionEffect pe : potionMaxDurationMap.keySet())
                 if (!activeEffects.contains(pe))
                     toRemove.add(pe);
-            
+
             for (PotionEffect pe : toRemove)
                 potionMaxDurationMap.remove(pe);
         }
