@@ -228,7 +228,10 @@ public class StatusEffectHUD
                     {
                         potionName = potionName + " IV";
                     }
-
+                  	else if (potionEffect.getAmplifier() > 3) {
+                       	potionName = potionName + " " + (potionEffect.getAmplifier() + 1);        
+                  	}
+                  
                     xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRendererObj.getStringWidth(potionName));
                 }
 
