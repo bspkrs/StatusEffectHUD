@@ -228,7 +228,31 @@ public class StatusEffectHUD
                     {
                         potionName = potionName + " IV";
                     }
-                  	else if (potionEffect.getAmplifier() > 3) {
+                    else if (potionEffect.getAmplifier() == 4)
+                    {
+                        potionName = potionName + " V";
+                    }
+                    else if (potionEffect.getAmplifier() == 5)
+                    {
+                        potionName = potionName + " VI";
+                    }
+                    else if (potionEffect.getAmplifier() == 6)
+                    {
+                        potionName = potionName + " VII";
+                    }
+                    else if (potionEffect.getAmplifier() == 7)
+                    {
+                        potionName = potionName + " VIII";
+                    }
+                    else if (potionEffect.getAmplifier() == 8)
+                    {
+                        potionName = potionName + " IX";
+                    }
+                    else if (potionEffect.getAmplifier() == 9)
+                    {
+                        potionName = potionName + " X";
+                    }
+                  	else if (potionEffect.getAmplifier() > 9) {
                        	potionName = potionName + " " + (potionEffect.getAmplifier() + 1);        
                   	}
                   
