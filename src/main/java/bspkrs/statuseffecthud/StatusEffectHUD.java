@@ -147,7 +147,7 @@ public class StatusEffectHUD
                 !mc.gameSettings.showDebugInfo)
         {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            scaledResolution = new ScaledResolution(mc);
             displayStatusEffects(mc);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
@@ -252,10 +252,10 @@ public class StatusEffectHUD
                     {
                         potionName = potionName + " X";
                     }
-                  	else if (potionEffect.getAmplifier() > 9) {
-                       	potionName = potionName + " " + (potionEffect.getAmplifier() + 1);        
-                  	}
-                  
+                    else if (potionEffect.getAmplifier() > 9) {
+                        potionName = potionName + " " + (potionEffect.getAmplifier() + 1);
+                    }
+
                     xBase = getX(enableBackground ? 120 : 18 + 4 + mc.fontRendererObj.getStringWidth(potionName));
                 }
 
