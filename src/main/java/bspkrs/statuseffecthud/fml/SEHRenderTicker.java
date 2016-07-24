@@ -7,6 +7,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -69,6 +71,11 @@ public class SEHRenderTicker
             MinecraftForge.EVENT_BUS.unregister(this);
             isRegistered = false;
         }
+    }
+
+    @SubscribeEvent
+    public void onPotionDisplay(RenderGameOverlayEvent.Pre event) {
+    	if (event.getType() == ElementType.POTION_ICONS) event.setCanceled(true);
     }
 
     public static boolean isRegistered()
