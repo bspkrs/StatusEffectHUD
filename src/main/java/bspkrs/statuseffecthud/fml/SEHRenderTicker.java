@@ -1,20 +1,22 @@
 package bspkrs.statuseffecthud.fml;
 
-import java.util.List;
-
+import bspkrs.statuseffecthud.StatusEffectHUD;
+import bspkrs.util.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
-import bspkrs.statuseffecthud.StatusEffectHUD;
-import bspkrs.util.ReflectionHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class SEHRenderTicker
@@ -66,9 +68,14 @@ public class SEHRenderTicker
 
         if (!StatusEffectHUD.onTickInGame(mc))
         {
-            FMLCommonHandler.instance().bus().unregister(this);
+            MinecraftForge.EVENT_BUS.unregister(this);
             isRegistered = false;
         }
+    }
+
+    @SubscribeEvent
+    public void onPotionDisplay(RenderGameOverlayEvent.Pre event) {
+    	if (event.getType() == ElementType.POTION_ICONS) event.setCanceled(true);
     }
 
     public static boolean isRegistered()
